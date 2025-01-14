@@ -18,6 +18,11 @@ public class RankingService {
     @Autowired
     private RankingRepository rankingRepository;
 
+    public List<RankingDto> listarRankingGeral() {
+        List<Ranking> rankings = rankingRepository.findTop10ByOrderBySaldoFinalDesc();
+        return RankingMapper.INSTANCE.toDtoList(rankings);
+    }
+
     public void registrarVencedorNoRanking(Jogador vencedor, Sala sala) {
         int numeroPropriedades = vencedor.getPropriedades().size();
 
@@ -29,15 +34,5 @@ public class RankingService {
         ranking.setSala(sala);
 
         rankingRepository.save(ranking);
-    }
-
-    public List<RankingDto> listarRankingGeral() {
-        List<Ranking> rankings = rankingRepository.findTop10ByOrderBySaldoFinalDesc();
-        return RankingMapper.INSTANCE.toDtoList(rankings);
-    }
-
-    public List<RankingDto> listarRankingPorJogador(String jogadorId) {
-        List<Ranking> rankings = rankingRepository.findByJogadorIdOrderByDataVitoriaDesc(jogadorId);
-        return RankingMapper.INSTANCE.toDtoList(rankings);
     }
 }

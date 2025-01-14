@@ -10,6 +10,4 @@ import java.util.List;
 public interface RankingRepository extends JpaRepository<Ranking, Long> {
 
     List<Ranking> findTop10ByOrderBySaldoFinalDesc();
-
-    List<Ranking> findByJogadorIdOrderByDataVitoriaDesc(String jogadorId);
 }

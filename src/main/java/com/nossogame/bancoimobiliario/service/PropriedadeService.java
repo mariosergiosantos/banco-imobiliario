@@ -112,4 +112,11 @@ public class PropriedadeService {
         List<Casa> propriedades = propriedadeRepository.findBySalaIdAndCor(salaId, cor);
         return propriedades.stream().allMatch(propriedade -> jogador.getId().equals(propriedade.getDono().getId()));
     }
+
+    public double calcularValorTotalPropriedades(Jogador jogador) {
+        return propriedadeRepository.findByDono(jogador)
+                .stream()
+                .mapToDouble(Propriedade::getValorCompra)
+                .sum();
+    }
 }

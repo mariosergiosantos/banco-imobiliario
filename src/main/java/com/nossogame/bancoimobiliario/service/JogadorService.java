@@ -53,6 +53,11 @@ public class JogadorService {
         return jogador;
     }
 
+    public Jogador findById(String jogadorId) throws ResourceNotFoundException {
+        return jogadorRepository.findById(jogadorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Jogador não encontrado"));
+    }
+
     public List<Jogador> listarJogadoresDaSala(String salaId) throws ResourceNotFoundException {
         Sala sala = salaService.buscarSalaPorId(salaId);
         return sala.getJogadores();
@@ -75,5 +80,9 @@ public class JogadorService {
                 .orElseThrow(() -> new ResourceNotFoundException("Jogador não encontrado"));
         jogador.setSaldo(jogador.getSaldo() + saldo);
         return jogadorRepository.save(jogador);
+    }
+
+    public List<Jogador> buscarJogadoresPorSala(String salaId) {
+        return jogadorRepository.findBySalaId(salaId);
     }
 }
