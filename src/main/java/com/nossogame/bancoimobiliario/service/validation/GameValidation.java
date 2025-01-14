@@ -2,12 +2,12 @@ package com.nossogame.bancoimobiliario.service.validation;
 
 import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
 import com.nossogame.bancoimobiliario.model.Sala;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import static com.nossogame.bancoimobiliario.model.enuns.StatusSala.ABERTA;
 import static com.nossogame.bancoimobiliario.model.enuns.StatusSala.EM_ANDAMENTO;
 
-@Component
+@Service
 public class GameValidation {
 
     public void startGameValidate(Sala sala) throws RegraNegocialException {

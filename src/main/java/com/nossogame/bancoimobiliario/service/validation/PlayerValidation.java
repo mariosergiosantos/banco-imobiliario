@@ -2,12 +2,12 @@ package com.nossogame.bancoimobiliario.service.validation;
 
 import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
 import com.nossogame.bancoimobiliario.model.Sala;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import static com.nossogame.bancoimobiliario.config.AppConstantes.QUANTIDADE_MAXIMA_JOGADORES;
 import static com.nossogame.bancoimobiliario.model.enuns.StatusSala.ABERTA;
 
-@Component
+@Service
 public class PlayerValidation {
 
     public void validateCreatePlayer(Sala sala) throws RegraNegocialException {

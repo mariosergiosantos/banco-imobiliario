@@ -64,7 +64,7 @@ public class Transacao {
         this.descricao = descricao;
     }
 
-    public Transacao(Sala sala, Jogador jogador, TipoTransacao tipoTransacao, int salarioJogador, String descricao) {
+    public Transacao(Sala sala, Jogador jogador, TipoTransacao tipoTransacao, double salarioJogador, String descricao) {
         this.sala = sala;
         this.comprador = jogador;
         this.tipo = tipoTransacao;

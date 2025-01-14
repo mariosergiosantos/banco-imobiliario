@@ -20,7 +20,7 @@ public class TransacaoFactory {
         return new Transacao(sala, comprador, vendedor, propriedade, TipoTransacao.PAGAMENTO_ALUGUEL, valor, descricao);
     }
 
-    public static Transacao criarPagamentoSalario(Sala sala, Jogador jogador, int salarioJogador, String descricao) {
+    public static Transacao criarPagamentoSalario(Sala sala, Jogador jogador, double salarioJogador, String descricao) {
         return new Transacao(sala, jogador, TipoTransacao.PAGAMENTO_SALARIO, salarioJogador, descricao);
     }
 }
