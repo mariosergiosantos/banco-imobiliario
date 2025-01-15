@@ -1,10 +1,12 @@
 package com.nossogame.bancoimobiliario.controller;
 
+import com.nossogame.bancoimobiliario.dto.VencedorJogoDto;
 import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
 import com.nossogame.bancoimobiliario.exception.ResourceNotFoundException;
 import com.nossogame.bancoimobiliario.service.JogoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,9 +25,9 @@ public class JogoController {
 
     @PostMapping("/salas/{id}/finalizar")
     @ResponseStatus(HttpStatus.OK)
-    public void finalizarJogo(@PathVariable String id)
+    public ResponseEntity<VencedorJogoDto> finalizarJogo(@PathVariable String id)
             throws ResourceNotFoundException, RegraNegocialException {
-        jogoService.finalizar(id);
+        return ResponseEntity.ok(jogoService.finalizar(id));
     }
 
 

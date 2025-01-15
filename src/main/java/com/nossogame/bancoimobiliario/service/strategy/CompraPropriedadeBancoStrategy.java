@@ -10,6 +10,7 @@ import com.nossogame.bancoimobiliario.model.Transacao;
 import com.nossogame.bancoimobiliario.repository.TransacaoRepository;
 import com.nossogame.bancoimobiliario.service.JogadorService;
 import com.nossogame.bancoimobiliario.service.PropriedadeService;
+import com.nossogame.bancoimobiliario.service.validation.TransactionValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +25,9 @@ public class CompraPropriedadeBancoStrategy implements TransacaoStrategy {
 
     @Autowired
     private TransacaoRepository transacaoRepository;
+
+    @Autowired
+    private TransactionValidation transactionValidation;
 
     @Override
     public Transacao executar(Sala sala, Jogador jogador, Propriedade propriedade, double valor) throws RegraNegocialException, ResourceNotFoundException {

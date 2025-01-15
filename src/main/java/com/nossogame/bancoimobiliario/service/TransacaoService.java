@@ -2,6 +2,7 @@ package com.nossogame.bancoimobiliario.service;
 
 import com.nossogame.bancoimobiliario.dto.ComprarPropriedadeBancoRequestDto;
 import com.nossogame.bancoimobiliario.dto.ComprarPropriedadeJogadorRequestDto;
+import com.nossogame.bancoimobiliario.dto.PagamentoAluguelRequestDto;
 import com.nossogame.bancoimobiliario.dto.TransacaoDto;
 import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
 import com.nossogame.bancoimobiliario.exception.ResourceNotFoundException;
@@ -89,14 +90,14 @@ public class TransacaoService {
 
         propriedade.setDono(comprador);
 
-        jogadorService.debitarSaldo(comprador.getId(), propriedade.getValorCompra());
-        jogadorService.creditarSaldo(vendedor.getId(), propriedade.getValorCompra());
+        jogadorService.debitarSaldo(comprador.getId(), transacaoRequest.getValor());
+        jogadorService.creditarSaldo(vendedor.getId(), transacaoRequest.getValor());
 
         propriedadeService.atualizarPropriedade(propriedade);
 
         String descricao = "Compra da propriedade: " + propriedade.getNome() + " por " + comprador.getNome() + ", vendedor: " + vendedor.getNome();
 
-        Transacao transacao = TransacaoFactory.criarCompraPropriedadeJogador(sala, comprador, vendedor, propriedade, descricao);
+        Transacao transacao = TransacaoFactory.criarCompraPropriedadeJogador(sala, comprador, vendedor, propriedade, transacaoRequest.getValor(), descricao);
 
         return TransacaoMapper.INSTANCE.toDTO(transacao);
     }
@@ -119,5 +120,41 @@ public class TransacaoService {
     public List<TransacaoDto> listarTransacoesDaSala(String salaId) {
         return TransacaoMapper.INSTANCE.toDTO(transacaoRepository.findBySalaId(salaId)
                 .orElse(new ArrayList<>()));
+    }
+
+    @Transactional
+    public TransacaoDto pagamentoAluguel(String salaId, PagamentoAluguelRequestDto requestDto)
+            throws ResourceNotFoundException, RegraNegocialException {
+
+        Sala sala = transactionValidation.validarSalaEmAndamento(salaId);
+
+        Propriedade propriedade = propriedadeService.buscarPropriedade(requestDto.getPropriedadeId(), salaId);
+
+        Jogador jogadorProprietario = propriedade.getDono();
+        if (jogadorProprietario == null) {
+            throw new RegraNegocialException("A propriedade não pertence a nenhum jogador.");
+        }
+
+        if (jogadorProprietario.getId().equals(requestDto.getJogadorPaganteId())) {
+            throw new RegraNegocialException("Você não pode pagar aluguel para uma propriedade que já é sua.");
+        }
+
+        Jogador jogadorPagante = jogadorService.buscarJodagor(requestDto.getJogadorPaganteId(), salaId);
+
+        double valorAluguel = propriedade.getValorAluguelAtual();
+        if (jogadorPagante.getSaldo() < valorAluguel) {
+            throw new RegraNegocialException("Saldo insuficiente para pagar o aluguel.");
+        }
+
+        jogadorService.debitarSaldo(jogadorPagante.getId(), valorAluguel);
+        jogadorService.creditarSaldo(jogadorProprietario.getId(), valorAluguel);
+
+        Transacao transacao = TransacaoFactory.criarTransacaoPagamentoAluguel(sala, jogadorPagante, propriedade.getDono(), propriedade, "Pagamento de aluguel da propriedade: " + propriedade.getNome());
+
+        return TransacaoMapper.INSTANCE.toDTO(transacao);
+    }
+
+    public Transacao save(Transacao transacao)  {
+        return transacaoRepository.save(transacao);
     }
 }

@@ -27,11 +27,12 @@ public class JogadorController {
     @PostMapping("/salas/{id}")
     public ResponseEntity<JogadorDto> adicionarJogador(@PathVariable String id, @RequestBody Jogador jogador)
             throws ResourceNotFoundException, RegraNegocialException {
-        return ResponseEntity.ok(jogadorService.adicionarJogador(id, jogador));
+        JogadorDto jogadorDto = jogadorService.adicionarJogador(id, jogador);
+        return new ResponseEntity<>(jogadorDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/salas/{id}")
-    public ResponseEntity<List<Jogador>> listarJogadoresDaSala(@PathVariable String id)
+    public ResponseEntity<List<JogadorDto>> listarJogadoresDaSala(@PathVariable String id)
             throws ResourceNotFoundException {
         return ResponseEntity.ok(jogadorService.listarJogadoresDaSala(id));
     }
@@ -40,7 +41,7 @@ public class JogadorController {
     public ResponseEntity<Void> aplicarImpacto(@PathVariable String id, @RequestBody CartaImpactoRequestDto impacto)
             throws ResourceNotFoundException {
         sorteRevesService.aplicarImpacto(id, impacto);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 }

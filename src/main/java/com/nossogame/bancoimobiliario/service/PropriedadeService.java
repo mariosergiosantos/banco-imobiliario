@@ -1,10 +1,15 @@
 package com.nossogame.bancoimobiliario.service;
 
+import com.nossogame.bancoimobiliario.dto.ConstruirPropriedadeRequestDto;
+import com.nossogame.bancoimobiliario.dto.TransacaoDto;
 import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
 import com.nossogame.bancoimobiliario.exception.ResourceNotFoundException;
+import com.nossogame.bancoimobiliario.factory.TransacaoFactory;
+import com.nossogame.bancoimobiliario.mapper.TransacaoMapper;
 import com.nossogame.bancoimobiliario.model.*;
 import com.nossogame.bancoimobiliario.model.enuns.CorPropriedade;
 import com.nossogame.bancoimobiliario.repository.PropriedadeRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +21,12 @@ public class PropriedadeService {
 
     @Autowired
     private PropriedadeRepository propriedadeRepository;
+
+    @Autowired
+    private JogadorService jogadorService;
+
+    @Autowired
+    private TransacaoService transacaoService;
 
     public Propriedade atualizarPropriedade(Propriedade propriedade) {
         return propriedadeRepository.save(propriedade);
@@ -82,35 +93,10 @@ public class PropriedadeService {
         propriedadeRepository.saveAll(propriedades);
     }
 
-    public void construirCasa(String propriedadeId, Jogador jogador) throws RegraNegocialException, ResourceNotFoundException {
-        Propriedade propriedade = propriedadeRepository.findById(propriedadeId)
-                .orElseThrow(() -> new ResourceNotFoundException("Propriedade não encontrada"));
-
-        Casa casa = validateContruirCasa(jogador, propriedade);
-
-        casa.setNumeroCasas(casa.getNumeroCasas() + 1);
-
-        //TODO realizar pagamento da propriedade
-        propriedadeRepository.save(propriedade);
-    }
-
-    private Casa validateContruirCasa(Jogador jogador, Propriedade propriedade) throws RegraNegocialException {
-        if (!(propriedade instanceof Casa)) {
-            throw new RegraNegocialException("Apenas propriedades do tipo Casa permitem construção.");
-        }
-
-        Casa casa = (Casa) propriedade;
-
-        if (!verificarTodasPropriedadesDaCor(propriedade.getSala().getId(), casa.getCor(), jogador)) {
-            throw new RegraNegocialException("Você precisa possuir todas as propriedades desta cor para construir casas.");
-        }
-
-        return casa;
-    }
-
-    private boolean verificarTodasPropriedadesDaCor(String salaId, CorPropriedade cor, Jogador jogador) {
+    private boolean verificarPropriedadesDaMesmaCor(String salaId, CorPropriedade cor, Jogador jogador) {
         List<Casa> propriedades = propriedadeRepository.findBySalaIdAndCor(salaId, cor);
-        return propriedades.stream().allMatch(propriedade -> jogador.getId().equals(propriedade.getDono().getId()));
+        return propriedades.stream()
+                .allMatch(propriedade -> jogador.getId().equals(propriedade.getDono().getId()));
     }
 
     public double calcularValorTotalPropriedades(Jogador jogador) {
@@ -118,5 +104,59 @@ public class PropriedadeService {
                 .stream()
                 .mapToDouble(Propriedade::getValorCompra)
                 .sum();
+    }
+
+    @Transactional
+    public TransacaoDto construirPropriedade(String salaId, ConstruirPropriedadeRequestDto requestDto)
+            throws ResourceNotFoundException, RegraNegocialException {
+
+        Propriedade propriedade = propriedadeRepository.findById(requestDto.getPropriedadeId())
+                .orElseThrow(() -> new ResourceNotFoundException("Propriedade não encontrada."));
+
+
+        Jogador jogador = jogadorService.findById(requestDto.getJogadorId());
+
+        if (!(propriedade instanceof Casa)) {
+            throw new RegraNegocialException("Apenas propriedades do tipo Casa permitem construção.");
+        }
+
+        Casa casa = (Casa) propriedade;
+
+        boolean todasPropriedadesPossuidas = verificarPropriedadesDaMesmaCor(salaId, casa.getCor(), jogador);
+        if (!todasPropriedadesPossuidas) {
+            throw new RegraNegocialException("Você precisa possuir todas as propriedades da mesma cor para construir.");
+        }
+
+        if (casa.isHipotecada()) {
+            throw new RegraNegocialException("Não é possível construir em propriedades hipotecadas.");
+        }
+
+        if (casa.isHotel()) {
+            throw new RegraNegocialException("A propriedade já atingiu o limite de construções.");
+        }
+
+        double custoConstrucao = calcularCustoConstrucao(casa);
+        if (jogador.getSaldo() < custoConstrucao) {
+            throw new RegraNegocialException("Saldo insuficiente para construir.");
+        }
+
+        casa.setNumeroCasas(casa.getNumeroCasas() + casa.getNumeroCasas() + 1);
+
+        if (casa.getNumeroCasas() == 4) {
+            casa.setHotel(true);
+            casa.setNumeroCasas(0);
+        }
+
+        propriedadeRepository.save(casa);
+
+        jogadorService.debitarSaldo(jogador.getId(), custoConstrucao);
+
+        Transacao transacao = TransacaoFactory.criarTransacaoContruirPropriedade(propriedade.getSala(), jogador, propriedade, custoConstrucao, "Construção de propriedade");
+
+        return TransacaoMapper.INSTANCE.toDTO(transacaoService.save(transacao));
+    }
+
+    private double calcularCustoConstrucao(Casa casa) {
+        return casa.getValorCompra() * (casa.getNumeroCasas() + 1);
     }
 }

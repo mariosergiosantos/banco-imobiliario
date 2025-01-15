@@ -1,7 +1,9 @@
 package com.nossogame.bancoimobiliario.service;
 
+import com.nossogame.bancoimobiliario.dto.VencedorJogoDto;
 import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
 import com.nossogame.bancoimobiliario.exception.ResourceNotFoundException;
+import com.nossogame.bancoimobiliario.mapper.JogadorMapper;
 import com.nossogame.bancoimobiliario.model.Jogador;
 import com.nossogame.bancoimobiliario.model.Sala;
 import com.nossogame.bancoimobiliario.model.enuns.StatusEmprestimo;
@@ -47,7 +49,7 @@ public class JogoService {
         salaService.atualizarSala(sala);
     }
 
-    public void finalizar(String id) throws ResourceNotFoundException, RegraNegocialException {
+    public VencedorJogoDto finalizar(String id) throws ResourceNotFoundException, RegraNegocialException {
         Sala sala = salaService.buscarSalaPorId(id);
 
         gameValidation.endGameValidation(sala);
@@ -58,9 +60,11 @@ public class JogoService {
 
         sala.setStatus(StatusSala.ENCERRADA);
         salaService.atualizarSala(sala);
+
+        return JogadorMapper.INSTANCE.toDto(vencedor);
     }
 
-    public Jogador determinarVencedor(String salaId) throws RegraNegocialException {
+    public Jogador determinarVencedor(String salaId) throws RegraNegocialException, ResourceNotFoundException {
         List<Jogador> jogadores = jogadorService.buscarJogadoresPorSala(salaId);
 
         List<Jogador> jogadoresElegiveis = jogadores.stream()
@@ -72,6 +76,10 @@ public class JogoService {
         }
 
         return jogadoresElegiveis.stream()
+                .map(jogador -> {
+                    jogador.setSaldoPropriedades(propriedadeService.calcularValorTotalPropriedades(jogador));
+                    return jogador;
+                })
                 .max(Comparator.comparingDouble(this::calcularPatrimonioLiquido))
                 .orElseThrow(() -> new IllegalStateException("Erro ao determinar o vencedor."));
     }
@@ -82,7 +90,7 @@ public class JogoService {
 
     private double calcularPatrimonioLiquido(Jogador jogador) {
         double saldo = jogador.getSaldo();
-        double valorPropriedades = propriedadeService.calcularValorTotalPropriedades(jogador);
+        double valorPropriedades = jogador.getSaldoPropriedades();
         return saldo + valorPropriedades;
     }
 }

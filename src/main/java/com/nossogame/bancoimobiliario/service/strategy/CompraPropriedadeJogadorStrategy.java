@@ -43,7 +43,7 @@ public class CompraPropriedadeJogadorStrategy implements TransacaoStrategy {
         propriedade.setDono(comprador);
         propriedadeService.atualizarPropriedade(propriedade);
 
-        Transacao transacao = TransacaoFactory.criarCompraPropriedadeJogador(sala, comprador, vendedor, propriedade, "");
+        Transacao transacao = TransacaoFactory.criarCompraPropriedadeJogador(sala, comprador, vendedor, propriedade, valor, "");
         return transacaoRepository.save(transacao);
     }
 }

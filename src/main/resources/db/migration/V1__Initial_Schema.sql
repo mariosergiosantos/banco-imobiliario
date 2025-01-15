@@ -37,7 +37,7 @@ CREATE TABLE Transacao (
     destino_id UUID,
     propriedade_id UUID,
     valor DOUBLE NOT NULL,
-    tipo ENUM('COMPRA_PROPRIEDADE', 'PAGAMENTO_ALUGUEL', 'TRANSFERENCIA', 'HIPOTECA', 'COMPRA_DO_BANCO', 'SALARIO') NOT NULL,
+    tipo ENUM('COMPRA_PROPRIEDADE_DO_BANCO', 'COMPRA_PROPRIEDADE_JOGADOR', 'CONSTRUIR_PROPRIEDADE', 'PAGAMENTO_ALUGUEL', 'HIPOTECA', 'PAGAMENTO_SALARIO', 'EMPRESTIMO') NOT NULL,
     data_hora TIMESTAMP NOT NULL,
     descricao VARCHAR(100)
 );
@@ -50,6 +50,27 @@ CREATE TABLE Ranking (
     data_vitoria TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     sala_id VARCHAR(7) NOT NULL
 );
+
+CREATE TABLE Emprestimo (
+    id UUID NOT NULL PRIMARY KEY,
+    jogador_origem_id UUID NOT NULL,
+    jogador_destino_id UUID NOT NULL,
+    valor_contratado DOUBLE NOT NULL,
+    valor_acordado DOUBLE NOT NULL,
+    saldo_devedor DOUBLE NOT NULL,
+    data_emprestimo TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('PENDENTE', 'ENCERRADO') NOT NULL
+);
+
+--CREATE TABLE ConfiguracaoSala (
+ --   id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  --  sala_id VARCHAR(7) NOT NULL,
+   -- aluguel_multiplier DOUBLE DEFAULT 1.0,
+    --limite_emprestimo DOUBLE DEFAULT 100000,
+    --modo ENUM('TEMPO', 'RODADAS', 'NORMAL') NOT NULL DEFAULT 'NORMAL'
+    --CONSTRAINT fk_sala_configuracao FOREIGN KEY (sala_id) REFERENCES Sala(id)
+--);
+--
 
 
 -- Adição das constraints após a criação das tabelas
@@ -68,11 +89,6 @@ ALTER TABLE Propriedade
 ALTER TABLE Propriedade
     ADD CONSTRAINT fk_sala_propriedade FOREIGN KEY (sala_id) REFERENCES Sala(id);
 
---ALTER TABLE Propriedade
---    ADD CONSTRAINT chk_companhia_valida CHECK (
---        (is_companhia = TRUE AND cor IS NULL AND hotel = FALSE AND numero_casas = 0)
---        OR (is_companhia = FALSE);
-
 ALTER TABLE Transacao
     ADD CONSTRAINT fk_sala_transacao FOREIGN KEY (sala_id) REFERENCES Sala(id);
 
@@ -90,3 +106,9 @@ ALTER TABLE Ranking
 
 ALTER TABLE Ranking
     ADD CONSTRAINT fk_ranking_sala FOREIGN KEY (sala_id) REFERENCES Sala(id);
+
+ALTER TABLE Emprestimo
+    ADD CONSTRAINT fk_jogador_origem FOREIGN KEY (jogador_origem_id) REFERENCES Jogador(id);
+
+ALTER TABLE Emprestimo
+    ADD CONSTRAINT  fk_jogador_destino FOREIGN KEY (jogador_destino_id) REFERENCES Jogador(id)

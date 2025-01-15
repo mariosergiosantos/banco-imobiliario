@@ -34,7 +34,7 @@ public class PagamentoAluguelStrategy implements TransacaoStrategy {
         jogadorService.debitarSaldo(pagador.getId(), valor);
         jogadorService.creditarSaldo(recebedor.getId(), valor);
 
-        Transacao transacao = TransacaoFactory.criarTransacaoPagamentoAluguel(sala, pagador, recebedor, propriedade, valor, "");
+        Transacao transacao = TransacaoFactory.criarTransacaoPagamentoAluguel(sala, pagador, recebedor, propriedade, "");
         return transacaoRepository.save(transacao);
     }
 }

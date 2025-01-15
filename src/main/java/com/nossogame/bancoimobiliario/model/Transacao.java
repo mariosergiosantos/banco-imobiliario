@@ -45,30 +45,13 @@ public class Transacao {
     @Column(length = 255)
     private String descricao;
 
-    public Transacao(Sala sala, Jogador comprador, Propriedade propriedade, TipoTransacao tipoTransacao, double valorCompra, String descricao) {
-        this.sala = sala;
-        this.comprador = comprador;
-        this.propriedade = propriedade;
-        this.tipo = tipoTransacao;
-        this.valor = valorCompra;
-        this.descricao = descricao;
-    }
-
-    public Transacao(Sala sala, Jogador comprador, Jogador vendedor, Propriedade propriedade, TipoTransacao tipoTransacao, double valorCompra, String descricao) {
+    public Transacao(Sala sala, Jogador comprador, Jogador vendedor, Propriedade propriedade, TipoTransacao tipo, double valor, String descricao) {
         this.sala = sala;
         this.comprador = comprador;
         this.vendedor = vendedor;
         this.propriedade = propriedade;
-        this.tipo = tipoTransacao;
-        this.valor = valorCompra;
-        this.descricao = descricao;
-    }
-
-    public Transacao(Sala sala, Jogador jogador, TipoTransacao tipoTransacao, double salarioJogador, String descricao) {
-        this.sala = sala;
-        this.comprador = jogador;
-        this.tipo = tipoTransacao;
-        this.valor = salarioJogador;
+        this.tipo = tipo;
+        this.valor = valor;
         this.descricao = descricao;
     }
 

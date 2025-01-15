@@ -20,7 +20,7 @@ public class SalaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Sala> criarSala() {
+    public ResponseEntity<SalaDto> criarSala() {
         return ResponseEntity.ok(salaService.criarSala());
     }
 

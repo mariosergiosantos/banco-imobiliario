@@ -12,5 +12,5 @@ public interface JogadorRepository extends JpaRepository<Jogador, String> {
 
     Optional<Jogador> findByIdAndSalaId(String jogadorId, String salaId);
 
-    List<Jogador> findBySalaId(String salaId);
+    Optional<List<Jogador>> findBySalaId(String salaId);
 }

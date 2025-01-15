@@ -58,9 +58,17 @@ public class JogadorService {
                 .orElseThrow(() -> new ResourceNotFoundException("Jogador não encontrado"));
     }
 
-    public List<Jogador> listarJogadoresDaSala(String salaId) throws ResourceNotFoundException {
-        Sala sala = salaService.buscarSalaPorId(salaId);
-        return sala.getJogadores();
+    public List<JogadorDto> listarJogadoresDaSala(String salaId) throws ResourceNotFoundException {
+        List<Jogador> jogadores = jogadorRepository.findBySalaId(salaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Nenhum jogador encontrado"));
+        return JogadorMapper.INSTANCE.toDTOs(jogadores);
+    }
+
+    //TODO revisar necessidade de método, está duplicado com o de cima
+    public List<Jogador> buscarJogadoresPorSala(String salaId) throws ResourceNotFoundException {
+        List<Jogador> jogadores = jogadorRepository.findBySalaId(salaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Nenhum jogador encontrado"));
+        return jogadores;
     }
 
     public Jogador atualizarSaldo(Jogador jogador, double novoSaldo) {
@@ -80,9 +88,5 @@ public class JogadorService {
                 .orElseThrow(() -> new ResourceNotFoundException("Jogador não encontrado"));
         jogador.setSaldo(jogador.getSaldo() + saldo);
         return jogadorRepository.save(jogador);
-    }
-
-    public List<Jogador> buscarJogadoresPorSala(String salaId) {
-        return jogadorRepository.findBySalaId(salaId);
     }
 }

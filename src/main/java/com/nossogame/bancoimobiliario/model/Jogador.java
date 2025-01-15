@@ -29,6 +29,9 @@ public class Jogador {
     @Column(nullable = false)
     private boolean isAdmin;
 
+    @Transient
+    private double saldoPropriedades;
+
     public String getId() {
         return id;
     }
@@ -75,5 +78,13 @@ public class Jogador {
 
     public void setAdmin(boolean admin) {
         isAdmin = admin;
+    }
+
+    public double getSaldoPropriedades() {
+        return saldoPropriedades;
+    }
+
+    public void setSaldoPropriedades(double saldoPropriedades) {
+        this.saldoPropriedades = saldoPropriedades;
     }
 }

@@ -17,10 +17,10 @@ public class SalaService {
     @Autowired
     private SalaRepository salaRepository;
 
-    public Sala criarSala() {
+    public SalaDto criarSala() {
         Sala sala = new Sala();
         sala.setStatus(StatusSala.ABERTA);
-        return salaRepository.save(sala);
+        return SalaMapper.INSTANCE.toDTO(salaRepository.save(sala));
     }
 
     public Sala atualizarSala(Sala sala) {
