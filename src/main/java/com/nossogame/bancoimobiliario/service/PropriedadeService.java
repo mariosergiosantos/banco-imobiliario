@@ -25,9 +25,6 @@ public class PropriedadeService {
     @Autowired
     private JogadorService jogadorService;
 
-    @Autowired
-    private TransacaoService transacaoService;
-
     public Propriedade atualizarPropriedade(Propriedade propriedade) {
         return propriedadeRepository.save(propriedade);
     }
@@ -153,10 +150,15 @@ public class PropriedadeService {
 
         Transacao transacao = TransacaoFactory.criarTransacaoContruirPropriedade(propriedade.getSala(), jogador, propriedade, custoConstrucao, "Construção de propriedade");
 
-        return TransacaoMapper.INSTANCE.toDTO(transacaoService.save(transacao));
+        // TODO salvar transacao
+        return TransacaoMapper.INSTANCE.toDTO(new Transacao(null, null, null, null, null, 0, null));
     }
 
     private double calcularCustoConstrucao(Casa casa) {
         return casa.getValorCompra() * (casa.getNumeroCasas() + 1);
+    }
+
+    public List<Propriedade> buscarPropriedadesPorJogador(Jogador jogador) {
+        return propriedadeRepository.findByDono(jogador);
     }
 }

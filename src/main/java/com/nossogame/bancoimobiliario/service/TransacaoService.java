@@ -139,6 +139,10 @@ public class TransacaoService {
             throw new RegraNegocialException("Você não pode pagar aluguel para uma propriedade que já é sua.");
         }
 
+        if (propriedade.isHipotecada()) {
+            throw new RegraNegocialException("Não é possível pagar aluguel de propriedades hipotecadas.");
+        }
+
         Jogador jogadorPagante = jogadorService.buscarJodagor(requestDto.getJogadorPaganteId(), salaId);
 
         double valorAluguel = propriedade.getValorAluguelAtual();

@@ -1,5 +1,6 @@
 package com.nossogame.bancoimobiliario.model;
 
+import com.nossogame.bancoimobiliario.model.enuns.StatusJogador;
 import jakarta.persistence.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -22,6 +23,10 @@ public class Jogador {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sala_id")
     private Sala sala;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private StatusJogador status;
 
     @OneToMany(mappedBy = "dono", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Propriedade> propriedades;
@@ -62,6 +67,14 @@ public class Jogador {
 
     public void setSala(Sala sala) {
         this.sala = sala;
+    }
+
+    public StatusJogador getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusJogador status) {
+        this.status = status;
     }
 
     public List<Propriedade> getPropriedades() {

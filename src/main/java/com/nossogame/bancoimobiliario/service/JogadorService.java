@@ -89,4 +89,8 @@ public class JogadorService {
         jogador.setSaldo(jogador.getSaldo() + saldo);
         return jogadorRepository.save(jogador);
     }
+
+    public Jogador atualizarJogador(Jogador jogador) {
+        return jogadorRepository.save(jogador);
+    }
 }
