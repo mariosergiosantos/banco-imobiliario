@@ -4,6 +4,8 @@ import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
 import com.nossogame.bancoimobiliario.model.Sala;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 import static com.nossogame.bancoimobiliario.model.enuns.StatusSala.ABERTA;
 import static com.nossogame.bancoimobiliario.model.enuns.StatusSala.EM_ANDAMENTO;
 
@@ -16,7 +18,7 @@ public class GameValidation {
             throw new RegraNegocialException("Status da sala não permite inicio do jogo");
         }
 
-        if (sala.getJogadores().size() < 2) {
+        if (Objects.isNull(sala.getJogadores()) || sala.getJogadores().size() < 2) {
             throw new RegraNegocialException("Necessário ter ao menos 2 jogadores");
         }
     }

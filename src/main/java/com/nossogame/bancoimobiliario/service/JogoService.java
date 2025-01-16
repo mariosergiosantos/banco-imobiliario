@@ -37,8 +37,8 @@ public class JogoService {
     @Autowired
     private EmprestimoService emprestimoService;
 
-    public void iniciar(String id) throws ResourceNotFoundException, RegraNegocialException {
-        Sala sala = salaService.buscarSalaPorId(id);
+    public void iniciar(String salaId) throws ResourceNotFoundException, RegraNegocialException {
+        Sala sala = salaService.buscarSalaPorId(salaId);
 
         gameValidation.startGameValidate(sala);
 
@@ -49,14 +49,14 @@ public class JogoService {
         salaService.atualizarSala(sala);
     }
 
-    public VencedorJogoDto finalizar(String id) throws ResourceNotFoundException, RegraNegocialException {
-        Sala sala = salaService.buscarSalaPorId(id);
+    public VencedorJogoDto finalizar(String salaId) throws ResourceNotFoundException, RegraNegocialException {
+        Sala sala = salaService.buscarSalaPorId(salaId);
 
         gameValidation.endGameValidation(sala);
 
         Jogador vencedor = determinarVencedor(sala.getId());
 
-        rankingService.registrarVencedorNoRanking(vencedor, sala);
+        rankingService.registrarVitoria(vencedor, sala);
 
         sala.setStatus(StatusSala.ENCERRADA);
         salaService.atualizarSala(sala);
@@ -64,7 +64,7 @@ public class JogoService {
         return JogadorMapper.INSTANCE.toDto(vencedor);
     }
 
-    public Jogador determinarVencedor(String salaId) throws RegraNegocialException, ResourceNotFoundException {
+    private Jogador determinarVencedor(String salaId) throws RegraNegocialException, ResourceNotFoundException {
         List<Jogador> jogadores = jogadorService.buscarJogadoresPorSala(salaId);
 
         List<Jogador> jogadoresElegiveis = jogadores.stream()

@@ -90,6 +90,12 @@
 			<version>1.5.2.Final</version> <!-- A mesma versão do MapStruct -->
 			<scope>provided</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>br.com.six2six</groupId>
+			<artifactId>fixture-factory</artifactId>
+			<version>3.1.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -23,7 +23,7 @@ public class RankingService {
         return RankingMapper.INSTANCE.toDtoList(rankings);
     }
 
-    public void registrarVencedorNoRanking(Jogador vencedor, Sala sala) {
+    public void registrarVitoria(Jogador vencedor, Sala sala) {
         int numeroPropriedades = vencedor.getPropriedades().size();
 
         Ranking ranking = new Ranking();
