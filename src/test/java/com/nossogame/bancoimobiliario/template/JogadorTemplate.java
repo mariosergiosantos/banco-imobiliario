@@ -7,6 +7,7 @@ import com.nossogame.bancoimobiliario.model.Jogador;
 
 import java.util.UUID;
 
+import static com.nossogame.bancoimobiliario.config.AppConstantes.SALDO_INICIAL_JOGADOR;
 import static com.nossogame.bancoimobiliario.model.enuns.StatusJogador.ATIVO;
 
 public class JogadorTemplate implements TemplateLoader {
@@ -15,7 +16,7 @@ public class JogadorTemplate implements TemplateLoader {
         Fixture.of(Jogador.class).addTemplate("valido", new Rule() {{
             add("id", UUID.randomUUID().toString());
             add("nome", "Jogador 1");
-            add("saldo", 1500.0);
+            add("saldo", SALDO_INICIAL_JOGADOR);
             add("status", ATIVO);
         }});
     }

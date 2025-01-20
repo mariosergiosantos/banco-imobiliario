@@ -13,6 +13,8 @@ import com.nossogame.bancoimobiliario.model.enuns.StatusSala;
 import com.nossogame.bancoimobiliario.service.validation.GameValidation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -83,11 +85,15 @@ class JogoServiceTest extends AbstractTest {
         verify(propriedadeService, never()).cadastrarPropriedadesBase(sala);
     }
 
-    @Test
-    void deveLancarExcecaoAoIniciarJogoComStatusSalaIncorreto() throws ResourceNotFoundException, RegraNegocialException {
+    @CsvSource({
+            "EM_ANDAMENTO",
+            "ENCERRADA"
+    })
+    @ParameterizedTest
+    void deveLancarExcecaoAoIniciarJogoComStatusSalaIncorreto(String statusSala) throws ResourceNotFoundException, RegraNegocialException {
         Sala sala = Fixture.from(Sala.class).gimme("valida-criada", new Rule() {{
             add("id", codigoSala);
-            add("status", StatusSala.EM_ANDAMENTO);
+            add("status", StatusSala.valueOf(statusSala));
         }});
 
         when(salaService.buscarSalaPorId(codigoSala)).thenReturn(sala);
@@ -164,10 +170,15 @@ class JogoServiceTest extends AbstractTest {
         verify(rankingService, never()).registrarVitoria(jogador, sala);
     }
 
-    @Test
-    void deveLancarExcecaoAoEncerrarJogoNaoIniciado() throws ResourceNotFoundException, RegraNegocialException {
-        Sala sala = Fixture.from(Sala.class).gimme("valida-criada-com-jogadores", new Rule() {{
+    @CsvSource({
+            "ABERTA",
+            "ENCERRADA"
+    })
+    @ParameterizedTest
+    void deveLancarExcecaoAoEncerrarJogoNaoIniciado(String statusSala) throws ResourceNotFoundException, RegraNegocialException {
+        Sala sala = Fixture.from(Sala.class).gimme("valida-criada", new Rule() {{
             add("id", codigoSala);
+            add("status", StatusSala.valueOf(statusSala));
         }});
 
         when(salaService.buscarSalaPorId(codigoSala)).thenReturn(sala);

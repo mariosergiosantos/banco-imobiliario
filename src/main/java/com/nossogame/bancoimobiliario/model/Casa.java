@@ -18,7 +18,7 @@ public class Casa extends Propriedade {
     private boolean hotel;
 
     public Casa() {
-
+        super();
     }
 
     public Casa(String nome, CorPropriedade corPropriedade, int valorCompra, int aluguelBase, Sala sala) {

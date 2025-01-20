@@ -90,10 +90,13 @@ public class PropriedadeService {
         propriedadeRepository.saveAll(propriedades);
     }
 
+    //TODO adicionar validação para que todas as casas tenham a mesma quantidade de propriedade
     private boolean verificarPropriedadesDaMesmaCor(String salaId, CorPropriedade cor, Jogador jogador) {
         List<Casa> propriedades = propriedadeRepository.findBySalaIdAndCor(salaId, cor);
         return propriedades.stream()
-                .allMatch(propriedade -> jogador.getId().equals(propriedade.getDono().getId()));
+                .allMatch(propriedade ->
+                        propriedade.getDono() != null && jogador.getId().equals(propriedade.getDono().getId())
+                );
     }
 
     public double calcularValorTotalPropriedades(Jogador jogador) {
@@ -119,9 +122,9 @@ public class PropriedadeService {
 
         Casa casa = (Casa) propriedade;
 
-        boolean todasPropriedadesPossuidas = verificarPropriedadesDaMesmaCor(salaId, casa.getCor(), jogador);
-        if (!todasPropriedadesPossuidas) {
-            throw new RegraNegocialException("Você precisa possuir todas as propriedades da mesma cor para construir.");
+        double custoConstrucao = calcularCustoConstrucao(casa);
+        if (jogador.getSaldo() < custoConstrucao) {
+            throw new RegraNegocialException("Saldo insuficiente para construir.");
         }
 
         if (casa.isHipotecada()) {
@@ -132,12 +135,14 @@ public class PropriedadeService {
             throw new RegraNegocialException("A propriedade já atingiu o limite de construções.");
         }
 
-        double custoConstrucao = calcularCustoConstrucao(casa);
-        if (jogador.getSaldo() < custoConstrucao) {
-            throw new RegraNegocialException("Saldo insuficiente para construir.");
+        boolean todasPropriedadesPossuidas = verificarPropriedadesDaMesmaCor(salaId, casa.getCor(), jogador);
+        if (!todasPropriedadesPossuidas) {
+            throw new RegraNegocialException("Apenas propriedades do tipo Casa permitem construção.");
         }
 
-        casa.setNumeroCasas(casa.getNumeroCasas() + casa.getNumeroCasas() + 1);
+        jogadorService.debitarSaldo(jogador.getId(), custoConstrucao);
+
+        casa.setNumeroCasas(casa.getNumeroCasas() + 1);
 
         if (casa.getNumeroCasas() == 4) {
             casa.setHotel(true);
@@ -146,12 +151,10 @@ public class PropriedadeService {
 
         propriedadeRepository.save(casa);
 
-        jogadorService.debitarSaldo(jogador.getId(), custoConstrucao);
-
         Transacao transacao = TransacaoFactory.criarTransacaoContruirPropriedade(propriedade.getSala(), jogador, propriedade, custoConstrucao, "Construção de propriedade");
 
         // TODO salvar transacao
-        return TransacaoMapper.INSTANCE.toDTO(new Transacao(null, null, null, null, null, 0, null));
+        return TransacaoMapper.INSTANCE.toDTO(transacao);
     }
 
     private double calcularCustoConstrucao(Casa casa) {
