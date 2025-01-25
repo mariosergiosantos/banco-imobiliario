@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class RankingDto {
 
-    private String jogadorNome;
+    private String nomeJogador;
     private double saldoFinal;
     private int numeroPropriedades;
     private LocalDateTime dataVitoria;
@@ -13,20 +13,20 @@ public class RankingDto {
 
     }
 
-    public RankingDto(String jogadorNome, double saldoFinal, int numeroPropriedades, LocalDateTime dataVitoria) {
-        this.jogadorNome = jogadorNome;
+    public RankingDto(String nomeJogador, double saldoFinal, int numeroPropriedades, LocalDateTime dataVitoria) {
+        this.nomeJogador = nomeJogador;
         this.saldoFinal = saldoFinal;
         this.numeroPropriedades = numeroPropriedades;
         this.dataVitoria = dataVitoria;
     }
 
     // Getters e Setters
-    public String getJogadorNome() {
-        return jogadorNome;
+    public String getNomeJogador() {
+        return nomeJogador;
     }
 
-    public void setJogadorNome(String jogadorNome) {
-        this.jogadorNome = jogadorNome;
+    public void setNomeJogador(String nomeJogador) {
+        this.nomeJogador = nomeJogador;
     }
 
     public double getSaldoFinal() {

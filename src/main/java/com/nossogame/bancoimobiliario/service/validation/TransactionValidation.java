@@ -7,15 +7,11 @@ import com.nossogame.bancoimobiliario.model.Propriedade;
 import com.nossogame.bancoimobiliario.model.Sala;
 import com.nossogame.bancoimobiliario.model.enuns.StatusSala;
 import com.nossogame.bancoimobiliario.service.SalaService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TransactionValidation {
-
-    private static final Logger log = LoggerFactory.getLogger(TransactionValidation.class);
 
     @Autowired
     private SalaService salaService;
@@ -41,7 +37,6 @@ public class TransactionValidation {
     }
 
     public Sala validarSalaEmAndamento(String salaId) throws ResourceNotFoundException, RegraNegocialException {
-        log.info("Validando sala com ID: {}", salaId);
         Sala sala = salaService.buscarSalaPorId(salaId);
         if (!sala.getStatus().equals(StatusSala.EM_ANDAMENTO)) {
             throw new RegraNegocialException("Sala não está disponível para realizar transações.");

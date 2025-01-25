@@ -13,7 +13,7 @@ public interface RankingMapper {
 
     RankingMapper INSTANCE = Mappers.getMapper(RankingMapper.class);
 
-    @Mapping(source = "jogador.nome", target = "jogadorNome")
+    @Mapping(source = "jogador.nome", target = "nomeJogador")
     RankingDto toDto(Ranking ranking);
 
     List<RankingDto> toDtoList(List<Ranking> rankings);

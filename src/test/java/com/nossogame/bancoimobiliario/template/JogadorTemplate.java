@@ -17,7 +17,7 @@ public class JogadorTemplate implements TemplateLoader {
             add("id", UUID.randomUUID().toString());
             add("nome", "Jogador 1");
             add("saldo", SALDO_INICIAL_JOGADOR);
-            add("status", ATIVO);
+            //add("status", ATIVO);
         }});
     }
 }

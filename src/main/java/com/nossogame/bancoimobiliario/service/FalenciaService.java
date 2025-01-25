@@ -36,7 +36,7 @@ public class FalenciaService {
         }
 
         // Atualizar o status do jogador
-        jogador.setStatus(StatusJogador.FALIDO);
+        //jogador.setStatus(StatusJogador.FALIDO);
         jogador.setSaldo(0);
         jogadorService.atualizarJogador(jogador);
 

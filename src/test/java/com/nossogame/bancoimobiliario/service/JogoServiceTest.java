@@ -6,7 +6,9 @@ import com.nossogame.bancoimobiliario.AbstractTest;
 import com.nossogame.bancoimobiliario.dto.VencedorJogoDto;
 import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
 import com.nossogame.bancoimobiliario.exception.ResourceNotFoundException;
+import com.nossogame.bancoimobiliario.mapper.RankingMapper;
 import com.nossogame.bancoimobiliario.model.Jogador;
+import com.nossogame.bancoimobiliario.model.Ranking;
 import com.nossogame.bancoimobiliario.model.Sala;
 import com.nossogame.bancoimobiliario.model.enuns.StatusEmprestimo;
 import com.nossogame.bancoimobiliario.model.enuns.StatusSala;
@@ -119,18 +121,20 @@ class JogoServiceTest extends AbstractTest {
             add("sala", sala);
         }});
 
+        Ranking ranking = Fixture.from(Ranking.class).gimme("valido");
+
         when(salaService.buscarSalaPorId(codigoSala)).thenReturn(sala);
         doCallRealMethod().when(gameValidation).endGameValidation(sala);
         when(jogadorService.buscarJogadoresPorSala(codigoSala)).thenReturn(Collections.singletonList(jogador));
         when(emprestimoService.existsByJogadorDestinoAndStatus(jogador, StatusEmprestimo.PENDENTE)).thenReturn(false);
         when(propriedadeService.calcularValorTotalPropriedades(jogador)).thenReturn(1000.0);
-        doNothing().when(rankingService).registrarVitoria(jogador, sala);
+        when(rankingService.registrarVitoria(jogador, sala)).thenReturn(RankingMapper.INSTANCE.toDto(ranking));
 
         VencedorJogoDto resultado = jogoService.finalizar(codigoSala);
 
         assertEquals(codigoSala, resultado.getSalaId());
         assertEquals(jogador.getNome(), resultado.getNome());
-        assertEquals(1500.0, resultado.getSaldo());
+        assertEquals(2158000, resultado.getSaldo());
         assertEquals(1000, resultado.getSaldoPropriedades());
 
         verify(salaService).buscarSalaPorId(codigoSala);

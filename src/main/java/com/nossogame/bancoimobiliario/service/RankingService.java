@@ -23,7 +23,7 @@ public class RankingService {
         return RankingMapper.INSTANCE.toDtoList(rankings);
     }
 
-    public void registrarVitoria(Jogador vencedor, Sala sala) {
+    public RankingDto registrarVitoria(Jogador vencedor, Sala sala) {
         int numeroPropriedades = vencedor.getPropriedades().size();
 
         Ranking ranking = new Ranking();
@@ -33,6 +33,6 @@ public class RankingService {
         ranking.setDataVitoria(LocalDateTime.now());
         ranking.setSala(sala);
 
-        rankingRepository.save(ranking);
+        return RankingMapper.INSTANCE.toDto(rankingRepository.save(ranking));
     }
 }

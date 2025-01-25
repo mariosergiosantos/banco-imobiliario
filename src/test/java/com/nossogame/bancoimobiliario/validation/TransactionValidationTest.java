@@ -1,5 +1,6 @@
 package com.nossogame.bancoimobiliario.validation;
 
+import com.nossogame.bancoimobiliario.AbstractTest;
 import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
 import com.nossogame.bancoimobiliario.exception.ResourceNotFoundException;
 import com.nossogame.bancoimobiliario.model.*;
@@ -17,7 +18,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class TransactionValidationTest {
+class TransactionValidationTest extends AbstractTest {
 
     @Mock
     private SalaService salaService;

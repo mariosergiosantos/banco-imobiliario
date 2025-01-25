@@ -1,46 +1,23 @@
-package com.nossogame.bancoimobiliario.model;
+package com.nossogame.bancoimobiliario.dto;
 
 import com.nossogame.bancoimobiliario.model.enuns.StatusEmprestimo;
-import jakarta.persistence.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
-@Entity
-@EntityListeners(AuditingEntityListener.class)
-public class Emprestimo {
+public class EmprestimoDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-
-    @ManyToOne
-    @JoinColumn(name = "jogador_origem_id", nullable = false)
-    private Jogador jogadorOrigem;
-
-    @ManyToOne
-    @JoinColumn(name = "jogador_destino_id", nullable = false)
-    private Jogador jogadorDestino;
-
-    @Column(nullable = false)
+    private String jogadorOrigemId;
+    private String jogadorDestinoId;
     private double valorContratado;
-
-    @Column(nullable = false)
     private double valorDevolucao;
 
-    @Column(nullable = false)
     private double saldoDevedor;
 
-    @Column
     private double taxaJuros;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private StatusEmprestimo status;
 
-    @CreatedDate
-    @Column(nullable = false)
     private LocalDateTime dataEmprestimo;
 
     public String getId() {
@@ -51,20 +28,20 @@ public class Emprestimo {
         this.id = id;
     }
 
-    public Jogador getJogadorOrigem() {
-        return jogadorOrigem;
+    public String getJogadorOrigemId() {
+        return jogadorOrigemId;
     }
 
-    public void setJogadorOrigem(Jogador jogadorOrigem) {
-        this.jogadorOrigem = jogadorOrigem;
+    public void setJogadorOrigemId(String jogadorOrigemId) {
+        this.jogadorOrigemId = jogadorOrigemId;
     }
 
-    public Jogador getJogadorDestino() {
-        return jogadorDestino;
+    public String getJogadorDestinoId() {
+        return jogadorDestinoId;
     }
 
-    public void setJogadorDestino(Jogador jogadorDestino) {
-        this.jogadorDestino = jogadorDestino;
+    public void setJogadorDestinoId(String jogadorDestinoId) {
+        this.jogadorDestinoId = jogadorDestinoId;
     }
 
     public double getValorContratado() {
@@ -115,4 +92,3 @@ public class Emprestimo {
         this.dataEmprestimo = dataEmprestimo;
     }
 }
-

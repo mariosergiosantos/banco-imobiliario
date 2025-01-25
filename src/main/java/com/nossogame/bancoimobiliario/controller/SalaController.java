@@ -19,9 +19,8 @@ public class SalaController {
     private SalaService salaService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<SalaDto> criarSala() {
-        return ResponseEntity.ok(salaService.criarSala());
+        return new ResponseEntity(salaService.criarSala(), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")

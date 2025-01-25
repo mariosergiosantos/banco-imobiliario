@@ -24,9 +24,9 @@ public class Jogador {
     @JoinColumn(name = "sala_id")
     private Sala sala;
 
-    @Enumerated(EnumType.STRING)
+    /*@Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private StatusJogador status;
+    private StatusJogador status;*/
 
     @OneToMany(mappedBy = "dono", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Propriedade> propriedades;
@@ -69,13 +69,13 @@ public class Jogador {
         this.sala = sala;
     }
 
-    public StatusJogador getStatus() {
+    /*public StatusJogador getStatus() {
         return status;
     }
 
     public void setStatus(StatusJogador status) {
         this.status = status;
-    }
+    }*/
 
     public List<Propriedade> getPropriedades() {
         return propriedades;
