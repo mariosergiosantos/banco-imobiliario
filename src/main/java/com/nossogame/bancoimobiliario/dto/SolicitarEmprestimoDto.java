@@ -14,6 +14,7 @@ public class SolicitarEmprestimoDto {
     @Positive
     private double valorContratado;
 
+    //valorAPagar
     @Positive
     private double valorAcordado;
 

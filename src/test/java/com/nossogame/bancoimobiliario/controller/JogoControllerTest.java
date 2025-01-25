@@ -15,8 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -50,7 +49,8 @@ class JogoControllerTest extends AbstractTest {
         mockMvc.perform(post("/api/v1/jogo/salas/" + codigoSala + "/iniciar"))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.message").value("Necessário ter ao menos 2 jogadores"))
-                .andExpect(jsonPath("$.timestamp").exists());
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andExpect(header().exists("X-Correlation-Id"));
     }
 
     @Test
@@ -58,7 +58,8 @@ class JogoControllerTest extends AbstractTest {
         when(jogoService.finalizar(codigoSala)).thenReturn(new VencedorJogoDto());
 
         mockMvc.perform(post("/api/v1/jogo/salas/" + codigoSala + "/finalizar"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(header().exists("X-Correlation-Id"));
     }
 
     @Test
@@ -70,7 +71,8 @@ class JogoControllerTest extends AbstractTest {
         mockMvc.perform(post("/api/v1/jogo/salas/" + codigoSala + "/finalizar"))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.message").value("Status da sala não permite finalizar jogo"))
-                .andExpect(jsonPath("$.timestamp").exists());
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andExpect(header().exists("X-Correlation-Id"));
     }
 }
 

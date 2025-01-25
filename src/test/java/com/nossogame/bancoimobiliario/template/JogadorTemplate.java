@@ -15,7 +15,7 @@ public class JogadorTemplate implements TemplateLoader {
     public void load() {
         Fixture.of(Jogador.class).addTemplate("valido", new Rule() {{
             add("id", UUID.randomUUID().toString());
-            add("nome", "Jogador 1");
+            add("nome", "Mário");
             add("saldo", SALDO_INICIAL_JOGADOR);
             //add("status", ATIVO);
         }});

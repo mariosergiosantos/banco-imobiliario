@@ -8,6 +8,7 @@ import com.nossogame.bancoimobiliario.exception.ResourceNotFoundException;
 import com.nossogame.bancoimobiliario.service.EmprestimoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,10 +25,10 @@ public class EmprestimoController {
         return ResponseEntity.ok(emprestimo);
     }
 
-    @PostMapping
-    public ResponseEntity<EmprestimoDto> solicitarEmprestimo(@Valid @RequestBody SolicitarEmprestimoDto dto) throws RegraNegocialException, ResourceNotFoundException {
+    @PostMapping("/salas/{id}")
+    public ResponseEntity<EmprestimoDto> solicitarEmprestimo(@PathVariable String id, @Valid @RequestBody SolicitarEmprestimoDto dto) throws RegraNegocialException, ResourceNotFoundException {
         EmprestimoDto emprestimo = emprestimoService.solicitarEmprestimo(dto);
-        return ResponseEntity.ok(emprestimo);
+        return new ResponseEntity<>(emprestimo, HttpStatus.CREATED);
     }
 
     @PostMapping("/pagamento")

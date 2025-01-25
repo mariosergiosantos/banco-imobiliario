@@ -59,6 +59,7 @@ public class JogoService {
         rankingService.registrarVitoria(vencedor, sala);
 
         sala.setStatus(StatusSala.ENCERRADA);
+
         salaService.atualizarSala(sala);
 
         return JogadorMapper.INSTANCE.toDto(vencedor);

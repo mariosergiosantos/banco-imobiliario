@@ -2,11 +2,12 @@ package com.nossogame.bancoimobiliario.controller;
 
 import com.nossogame.bancoimobiliario.dto.CartaImpactoRequestDto;
 import com.nossogame.bancoimobiliario.dto.JogadorDto;
+import com.nossogame.bancoimobiliario.dto.request.JogadorRequestDto;
 import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
 import com.nossogame.bancoimobiliario.exception.ResourceNotFoundException;
-import com.nossogame.bancoimobiliario.model.Jogador;
 import com.nossogame.bancoimobiliario.service.JogadorService;
 import com.nossogame.bancoimobiliario.service.SorteRevesService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class JogadorController {
     private SorteRevesService sorteRevesService;
 
     @PostMapping("/salas/{id}")
-    public ResponseEntity<JogadorDto> adicionarJogador(@PathVariable String id, @RequestBody Jogador jogador)
+    public ResponseEntity<JogadorDto> adicionarJogador(@PathVariable String id, @Valid  @RequestBody JogadorRequestDto jogador)
             throws ResourceNotFoundException, RegraNegocialException {
         JogadorDto jogadorDto = jogadorService.adicionarJogador(id, jogador);
         return new ResponseEntity<>(jogadorDto, HttpStatus.CREATED);

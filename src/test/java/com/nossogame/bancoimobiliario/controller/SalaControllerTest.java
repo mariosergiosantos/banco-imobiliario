@@ -19,8 +19,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -46,7 +45,8 @@ class SalaControllerTest extends AbstractTest {
                 .andExpect(jsonPath("$.status").value("ABERTA"))
                 .andExpect(jsonPath("$.dataCriacao").exists())
                 .andExpect(jsonPath("$.jogadores").isEmpty())
-                .andExpect(jsonPath("$.propriedades").isEmpty());
+                .andExpect(jsonPath("$.propriedades").isEmpty())
+                .andExpect(header().exists("X-Correlation-Id"));
 
         verify(salaService).criarSala();
     }
@@ -61,7 +61,8 @@ class SalaControllerTest extends AbstractTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Sala não encontrada"))
-                .andExpect(jsonPath("$.timestamp").exists());
+                .andExpect(jsonPath("$.timestamp").exists())
+                .andExpect(header().exists("X-Correlation-Id"));
     }
 
     @Test
@@ -78,7 +79,8 @@ class SalaControllerTest extends AbstractTest {
                 .andExpect(jsonPath("$.status").value("ABERTA"))
                 .andExpect(jsonPath("$.dataCriacao").exists())
                 .andExpect(jsonPath("$.jogadores").isEmpty())
-                .andExpect(jsonPath("$.propriedades").isEmpty());
+                .andExpect(jsonPath("$.propriedades").isEmpty())
+                .andExpect(header().exists("X-Correlation-Id"));
 
         verify(salaService).buscarSalaPorId(codigoSala);
     }
@@ -88,7 +90,8 @@ class SalaControllerTest extends AbstractTest {
         mockMvc.perform(get("/api/v1/salas")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray());
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(header().exists("X-Correlation-Id"));
     }
 }
 

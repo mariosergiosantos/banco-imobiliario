@@ -1,6 +1,7 @@
 package com.nossogame.bancoimobiliario.service;
 
 import com.nossogame.bancoimobiliario.dto.JogadorDto;
+import com.nossogame.bancoimobiliario.dto.request.JogadorRequestDto;
 import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
 import com.nossogame.bancoimobiliario.exception.ResourceNotFoundException;
 import com.nossogame.bancoimobiliario.mapper.JogadorMapper;
@@ -28,14 +29,17 @@ public class JogadorService {
     @Autowired
     private PlayerValidation playerValidation;
 
-    public JogadorDto adicionarJogador(String salaId, Jogador jogador)
+    public JogadorDto adicionarJogador(String salaId, JogadorRequestDto jogadorRequestDto)
             throws ResourceNotFoundException, RegraNegocialException {
+
         Sala sala = salaService.buscarSalaPorId(salaId);
 
         playerValidation.validateCreatePlayer(sala);
 
+        Jogador jogador = new Jogador();
         jogador.setSala(sala);
         jogador.setSaldo(SALDO_INICIAL_JOGADOR);
+        jogador.setNome(jogadorRequestDto.getNome());
 
         try {
             jogadorRepository.save(jogador);
@@ -71,6 +75,7 @@ public class JogadorService {
         return jogadores;
     }
 
+    @Deprecated
     public Jogador atualizarSaldo(Jogador jogador, double novoSaldo) {
         jogador.setSaldo(novoSaldo);
         return jogadorRepository.save(jogador);
