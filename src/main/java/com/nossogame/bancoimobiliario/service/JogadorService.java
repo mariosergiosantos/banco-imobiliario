@@ -40,6 +40,7 @@ public class JogadorService {
         jogador.setSala(sala);
         jogador.setSaldo(SALDO_INICIAL_JOGADOR);
         jogador.setNome(jogadorRequestDto.getNome());
+        jogador.setAdmin(false);
 
         try {
             jogadorRepository.save(jogador);

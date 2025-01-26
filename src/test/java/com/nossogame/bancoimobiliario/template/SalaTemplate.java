@@ -18,6 +18,7 @@ public class SalaTemplate implements TemplateLoader {
             add("id", CodigoAleatorio.gerarCodigo());
             add("dataCriacao", LocalDateTime.now());
             add("status", StatusSala.ABERTA);
+            add("jogadores", has(1).of(Jogador.class, "adm"));
         }});
 
         Fixture.of(Sala.class).addTemplate("valida-criada-com-jogadores", new Rule() {{

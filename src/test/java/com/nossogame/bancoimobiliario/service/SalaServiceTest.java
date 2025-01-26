@@ -4,6 +4,8 @@ import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.Rule;
 import com.nossogame.bancoimobiliario.AbstractTest;
 import com.nossogame.bancoimobiliario.dto.SalaDto;
+import com.nossogame.bancoimobiliario.dto.request.SalaRequestDto;
+import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
 import com.nossogame.bancoimobiliario.model.Sala;
 import com.nossogame.bancoimobiliario.model.enuns.StatusSala;
 import com.nossogame.bancoimobiliario.repository.SalaRepository;
@@ -27,19 +29,22 @@ class SalaServiceTest extends AbstractTest {
     private SalaRepository salaRepository;
 
     @Test
-    void deveCriarSalaComSucesso() {
+    void deveCriarSalaComSucesso() throws RegraNegocialException {
         Sala novaSala = Fixture.from(Sala.class).gimme("valida-criada", new Rule() {{
             add("id", codigoSala);
         }});
 
+        SalaRequestDto salaRequestDto = new SalaRequestDto("Mário");
+
         when(salaRepository.save(any(Sala.class))).thenReturn(novaSala);
 
-        SalaDto result = salaService.criarSala();
+        SalaDto result = salaService.criarSala(salaRequestDto);
 
         assertNotNull(result);
         assertEquals(codigoSala, result.getId());
         assertEquals(StatusSala.ABERTA, result.getStatus());
-        assertNull(result.getJogadores());
+        assertNotNull(result.getJogadores());
+        assertEquals(1, result.getJogadores().size());
         assertNull(result.getPropriedades());
 
         verify(salaRepository, times(1)).save(any(Sala.class));

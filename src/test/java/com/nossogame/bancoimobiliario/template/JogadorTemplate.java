@@ -19,5 +19,13 @@ public class JogadorTemplate implements TemplateLoader {
             add("saldo", SALDO_INICIAL_JOGADOR);
             //add("status", ATIVO);
         }});
+
+        Fixture.of(Jogador.class).addTemplate("adm", new Rule() {{
+            add("id", UUID.randomUUID().toString());
+            add("nome", "Mário");
+            add("saldo", SALDO_INICIAL_JOGADOR);
+            add("isAdmin", true);
+            //add("status", ATIVO);
+        }});
     }
 }

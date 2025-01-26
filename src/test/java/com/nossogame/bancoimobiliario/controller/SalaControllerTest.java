@@ -3,6 +3,7 @@ package com.nossogame.bancoimobiliario.controller;
 import br.com.six2six.fixturefactory.Fixture;
 import br.com.six2six.fixturefactory.Rule;
 import com.nossogame.bancoimobiliario.AbstractTest;
+import com.nossogame.bancoimobiliario.dto.request.SalaRequestDto;
 import com.nossogame.bancoimobiliario.exception.ResourceNotFoundException;
 import com.nossogame.bancoimobiliario.mapper.SalaMapper;
 import com.nossogame.bancoimobiliario.model.Sala;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -36,33 +38,45 @@ class SalaControllerTest extends AbstractTest {
 
         Sala sala = Fixture.from(Sala.class).gimme("valida-criada");
 
-        when(salaService.criarSala()).thenReturn(SalaMapper.INSTANCE.toDTO(sala));
+        when(salaService.criarSala(any(SalaRequestDto.class))).thenReturn(SalaMapper.INSTANCE.toDTO(sala));
 
         mockMvc.perform(post("/api/v1/salas")
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                    {
+                                        "nomeJogadorAdm": "Mário"
+                                    }
+                                """))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.status").value("ABERTA"))
                 .andExpect(jsonPath("$.dataCriacao").exists())
-                .andExpect(jsonPath("$.jogadores").isEmpty())
+                .andExpect(jsonPath("$.jogadores").isNotEmpty())
                 .andExpect(jsonPath("$.propriedades").isEmpty())
                 .andExpect(header().exists("X-Correlation-Id"));
 
-        verify(salaService).criarSala();
+        verify(salaService).criarSala(any(SalaRequestDto.class));
     }
 
     @Test
     void deveRetornarErroQuandoNaoEncontrarSala() throws Exception {
 
-        when(salaService.buscarSalaPorId(codigoSala))
+        when(salaService.buscarSala(codigoSala))
                 .thenThrow(new ResourceNotFoundException("Sala não encontrada"));
 
         mockMvc.perform(get("/api/v1/salas/" + codigoSala)
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                    {
+                                        "nomeJogadorAdm": "JogadorA"
+                                    }
+                                """))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Sala não encontrada"))
                 .andExpect(jsonPath("$.timestamp").exists())
                 .andExpect(header().exists("X-Correlation-Id"));
+
+        verify(salaService).buscarSala(codigoSala);
     }
 
     @Test
@@ -71,18 +85,18 @@ class SalaControllerTest extends AbstractTest {
             add("id", codigoSala);
         }});
 
-        when(salaService.buscarSalaPorId(codigoSala)).thenReturn(sala);
+        when(salaService.buscarSala(codigoSala)).thenReturn(SalaMapper.INSTANCE.toDTO(sala));
 
         mockMvc.perform(get("/api/v1/salas/" + codigoSala)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(codigoSala))
                 .andExpect(jsonPath("$.status").value("ABERTA"))
                 .andExpect(jsonPath("$.dataCriacao").exists())
-                .andExpect(jsonPath("$.jogadores").isEmpty())
+                .andExpect(jsonPath("$.jogadores").isNotEmpty())
                 .andExpect(jsonPath("$.propriedades").isEmpty())
                 .andExpect(header().exists("X-Correlation-Id"));
 
-        verify(salaService).buscarSalaPorId(codigoSala);
+        verify(salaService).buscarSala(codigoSala);
     }
 
     @Test

@@ -85,6 +85,14 @@ public class Sala {
         this.jogadores = jogadores;
     }
 
+    public void addJogador(Jogador jogador) {
+        if (this.jogadores == null) {
+            this.jogadores = List.of(jogador);
+            return;
+        }
+        this.jogadores.add(jogador);
+    }
+
     public List<Propriedade> getPropriedades() {
         return propriedades;
     }

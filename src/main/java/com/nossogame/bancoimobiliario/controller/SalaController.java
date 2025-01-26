@@ -2,9 +2,9 @@ package com.nossogame.bancoimobiliario.controller;
 
 import com.nossogame.bancoimobiliario.dto.SalaDto;
 import com.nossogame.bancoimobiliario.dto.VencedorJogoDto;
+import com.nossogame.bancoimobiliario.dto.request.SalaRequestDto;
 import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
 import com.nossogame.bancoimobiliario.exception.ResourceNotFoundException;
-import com.nossogame.bancoimobiliario.model.Sala;
 import com.nossogame.bancoimobiliario.service.JogoService;
 import com.nossogame.bancoimobiliario.service.SalaService;
 import org.slf4j.Logger;
@@ -29,13 +29,13 @@ public class SalaController {
     private SalaService salaService;
 
     @PostMapping
-    public ResponseEntity<SalaDto> criarSala() {
-        return new ResponseEntity(salaService.criarSala(), HttpStatus.CREATED);
+    public ResponseEntity<SalaDto> criarSala(@RequestBody SalaRequestDto salaRequestDto) {
+        return new ResponseEntity(salaService.criarSala(salaRequestDto), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Sala> buscarSala(@PathVariable String id) throws ResourceNotFoundException {
-        return ResponseEntity.ok(salaService.buscarSalaPorId(id));
+    public ResponseEntity<SalaDto> buscarSala(@PathVariable String id) throws ResourceNotFoundException {
+        return ResponseEntity.ok(salaService.buscarSala(id));
     }
 
     @GetMapping
