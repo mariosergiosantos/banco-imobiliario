@@ -38,8 +38,8 @@ public class CompraPropriedadeJogadorStrategy implements TransacaoStrategy {
             throw new RegraNegocialException("Saldo insuficiente para comprar a propriedade.");
         }
 
-        jogadorService.debitarSaldo(comprador.getId(), propriedade.getValorCompra());
-        jogadorService.creditarSaldo(vendedor.getId(), propriedade.getValorCompra());
+        jogadorService.debitarSaldo(comprador, propriedade.getValorCompra());
+        jogadorService.creditarSaldo(vendedor, propriedade.getValorCompra());
         propriedade.setDono(comprador);
         propriedadeService.atualizarPropriedade(propriedade);
 

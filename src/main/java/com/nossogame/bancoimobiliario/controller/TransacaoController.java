@@ -4,9 +4,11 @@ import com.nossogame.bancoimobiliario.dto.ComprarPropriedadeBancoRequestDto;
 import com.nossogame.bancoimobiliario.dto.ComprarPropriedadeJogadorRequestDto;
 import com.nossogame.bancoimobiliario.dto.PagamentoAluguelRequestDto;
 import com.nossogame.bancoimobiliario.dto.TransacaoDto;
+import com.nossogame.bancoimobiliario.dto.request.TransacaoRequestDto;
 import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
 import com.nossogame.bancoimobiliario.exception.ResourceNotFoundException;
 import com.nossogame.bancoimobiliario.service.TransacaoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,15 @@ public class TransacaoController {
     @Autowired
     private TransacaoService transacaoService;
 
+    @PostMapping("/salas/{salaId}")
+    public ResponseEntity<TransacaoDto> realizarTransacao(
+            @PathVariable String salaId,
+            @RequestBody @Valid TransacaoRequestDto transacaoRequest)
+            throws ResourceNotFoundException, RegraNegocialException {
+        return ResponseEntity.ok(transacaoService.registrarTransacao(salaId, transacaoRequest));
+    }
+
+    @Deprecated
     @PostMapping("/salas/{salaId}/comprar/banco")
     public ResponseEntity<TransacaoDto> comprarPropriedadeBanco(
             @PathVariable String salaId,
@@ -28,6 +39,7 @@ public class TransacaoController {
         return ResponseEntity.ok(transacaoService.comprarPropriedadeBanco(salaId, transacao));
     }
 
+    @Deprecated
     @PostMapping("/salas/{salaId}/comprar/jogador")
     public ResponseEntity<TransacaoDto> comprarPropriedadeJogador(
             @PathVariable String salaId,
@@ -36,6 +48,7 @@ public class TransacaoController {
         return ResponseEntity.ok(transacaoService.comprarPropriedadeJogador(salaId, transacao));
     }
 
+    @Deprecated
     @PostMapping("/salas/{salaId}/jogador/{jogadorId}/salario")
     public ResponseEntity<TransacaoDto> pagamentoSalario(
             @PathVariable String salaId,
@@ -44,6 +57,7 @@ public class TransacaoController {
         return ResponseEntity.ok(transacaoService.pagamentoSalario(salaId, jogadorId));
     }
 
+    @Deprecated
     @PostMapping("/salas/{salaId}/aluguel")
     public ResponseEntity<TransacaoDto> pagamentoAluguel(
             @PathVariable String salaId,

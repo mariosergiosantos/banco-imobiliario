@@ -107,12 +107,11 @@ public class PropriedadeService {
     }
 
     @Transactional
-    public TransacaoDto construirPropriedade(String salaId, ConstruirPropriedadeRequestDto requestDto)
+    public TransacaoDto construirPropriedade(String salaId, String propriedadeId, ConstruirPropriedadeRequestDto requestDto)
             throws ResourceNotFoundException, RegraNegocialException {
 
-        Propriedade propriedade = propriedadeRepository.findById(requestDto.getPropriedadeId())
+        Propriedade propriedade = propriedadeRepository.findById(propriedadeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Propriedade não encontrada."));
-
 
         Jogador jogador = jogadorService.findById(requestDto.getJogadorId());
 
@@ -140,7 +139,7 @@ public class PropriedadeService {
             throw new RegraNegocialException("Apenas propriedades do tipo Casa permitem construção.");
         }
 
-        jogadorService.debitarSaldo(jogador.getId(), custoConstrucao);
+        jogadorService.debitarSaldo(jogador, custoConstrucao);
 
         casa.setNumeroCasas(casa.getNumeroCasas() + 1);
 

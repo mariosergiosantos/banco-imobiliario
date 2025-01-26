@@ -25,23 +25,23 @@ public class JogadorController {
     @Autowired
     private SorteRevesService sorteRevesService;
 
-    @PostMapping("/salas/{id}")
-    public ResponseEntity<JogadorDto> adicionarJogador(@PathVariable String id, @Valid  @RequestBody JogadorRequestDto jogador)
+    @PostMapping
+    public ResponseEntity<JogadorDto> adicionarJogador(@Valid @RequestBody JogadorRequestDto jogador)
             throws ResourceNotFoundException, RegraNegocialException {
-        JogadorDto jogadorDto = jogadorService.adicionarJogador(id, jogador);
+        JogadorDto jogadorDto = jogadorService.adicionarJogador(jogador.getSalaId(), jogador);
         return new ResponseEntity<>(jogadorDto, HttpStatus.CREATED);
     }
 
-    @GetMapping("/salas/{id}")
-    public ResponseEntity<List<JogadorDto>> listarJogadoresDaSala(@PathVariable String id)
+    @GetMapping("/salas/{salaId}")
+    public ResponseEntity<List<JogadorDto>> listarJogadoresDaSala(@PathVariable String salaId)
             throws ResourceNotFoundException {
-        return ResponseEntity.ok(jogadorService.listarJogadoresDaSala(id));
+        return ResponseEntity.ok(jogadorService.listarJogadoresDaSala(salaId));
     }
 
-    @PostMapping("/salas/{id}/sorte-reves/aplicar")
-    public ResponseEntity<Void> aplicarImpacto(@PathVariable String id, @RequestBody CartaImpactoRequestDto impacto)
+    @PostMapping("/{jogadorId}/sorte-reves")
+    public ResponseEntity<Void> aplicarImpacto(@PathVariable String jogadorId, @RequestBody CartaImpactoRequestDto impacto)
             throws ResourceNotFoundException {
-        sorteRevesService.aplicarImpacto(id, impacto);
+        sorteRevesService.aplicarImpacto(jogadorId, impacto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

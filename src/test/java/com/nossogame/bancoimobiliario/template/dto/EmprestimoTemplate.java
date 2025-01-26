@@ -15,8 +15,8 @@ public class EmprestimoTemplate implements TemplateLoader {
     public void load() {
         Fixture.of(EmprestimoDto.class).addTemplate("valido", new Rule() {{
             add("id", UUID.randomUUID().toString());
-            add("jogadorOrigemId", UUID.randomUUID().toString());
-            add("jogadorDestinoId", UUID.randomUUID().toString());
+            add("pagadorId", UUID.randomUUID().toString());
+            add("recebedorId", UUID.randomUUID().toString());
             add("valorContratado", 500d);
             add("valorDevolucao", 600d);
             add("saldoDevedor", 600d);

@@ -66,17 +66,16 @@ class PropriedadeServiceTest extends AbstractTest {
         Casa casa = Fixture.from(Casa.class).gimme("casa", rule);
 
         ConstruirPropriedadeRequestDto requestDto = new ConstruirPropriedadeRequestDto();
-        requestDto.setPropriedadeId(casa.getId());
         requestDto.setJogadorId(jogador.getId());
 
         when(propriedadeRepository.findById(anyString())).thenReturn(Optional.of(casa));
         when(jogadorService.findById(jogador.getId())).thenReturn(jogador);
         when(propriedadeRepository.findBySalaIdAndCor(anyString(), any(CorPropriedade.class)))
                 .thenReturn(Fixture.from(Casa.class).gimme(3, "casa", rule));
-        when(jogadorService.debitarSaldo(anyString(), anyDouble())).thenReturn(jogador);
+        when(jogadorService.debitarSaldo(any(Jogador.class), anyDouble())).thenReturn(jogador);
         when(propriedadeRepository.save(casa)).thenReturn(casa);
 
-        TransacaoDto resultado = propriedadeService.construirPropriedade(UUID.randomUUID().toString(), requestDto);
+        TransacaoDto resultado = propriedadeService.construirPropriedade(UUID.randomUUID().toString(), casa.getId(), requestDto);
 
         assertNotNull(resultado);
 
@@ -85,7 +84,7 @@ class PropriedadeServiceTest extends AbstractTest {
         verify(propriedadeRepository).findById(casa.getId());
         verify(jogadorService).findById(jogador.getId());
         verify(propriedadeRepository).findBySalaIdAndCor(anyString(), any(CorPropriedade.class));
-        verify(jogadorService).debitarSaldo(anyString(), anyDouble());
+        verify(jogadorService).debitarSaldo(any(Jogador.class), anyDouble());
         verify(propriedadeRepository).save(casa);
     }
 
@@ -101,17 +100,16 @@ class PropriedadeServiceTest extends AbstractTest {
         Casa casa = Fixture.from(Casa.class).gimme("casa", rule);
 
         ConstruirPropriedadeRequestDto requestDto = new ConstruirPropriedadeRequestDto();
-        requestDto.setPropriedadeId(casa.getId());
         requestDto.setJogadorId(jogador.getId());
 
         when(propriedadeRepository.findById(anyString())).thenReturn(Optional.of(casa));
         when(jogadorService.findById(jogador.getId())).thenReturn(jogador);
         when(propriedadeRepository.findBySalaIdAndCor(anyString(), any(CorPropriedade.class)))
                 .thenReturn(Fixture.from(Casa.class).gimme(3, "casa", rule));
-        when(jogadorService.debitarSaldo(anyString(), anyDouble())).thenReturn(jogador);
+        when(jogadorService.debitarSaldo(any(Jogador.class), anyDouble())).thenReturn(jogador);
         when(propriedadeRepository.save(casa)).thenReturn(casa);
 
-        TransacaoDto resultado = propriedadeService.construirPropriedade(UUID.randomUUID().toString(), requestDto);
+        TransacaoDto resultado = propriedadeService.construirPropriedade(UUID.randomUUID().toString(), casa.getId(), requestDto);
 
         assertNotNull(resultado);
 
@@ -120,7 +118,7 @@ class PropriedadeServiceTest extends AbstractTest {
         verify(propriedadeRepository).findById(casa.getId());
         verify(jogadorService).findById(jogador.getId());
         verify(propriedadeRepository).findBySalaIdAndCor(anyString(), any(CorPropriedade.class));
-        verify(jogadorService).debitarSaldo(anyString(), anyDouble());
+        verify(jogadorService).debitarSaldo(any(Jogador.class), anyDouble());
         verify(propriedadeRepository).save(casa);
     }
 
@@ -133,21 +131,20 @@ class PropriedadeServiceTest extends AbstractTest {
         }});
 
         ConstruirPropriedadeRequestDto requestDto = new ConstruirPropriedadeRequestDto();
-        requestDto.setPropriedadeId(companhia.getId());
         requestDto.setJogadorId(jogador.getId());
 
         when(propriedadeRepository.findById(anyString())).thenReturn(Optional.of(companhia));
         when(jogadorService.findById(jogador.getId())).thenReturn(jogador);
 
         RegraNegocialException exception = assertThrows(RegraNegocialException.class, () ->
-                propriedadeService.construirPropriedade(UUID.randomUUID().toString(), requestDto));
+                propriedadeService.construirPropriedade(UUID.randomUUID().toString(), companhia.getId(), requestDto));
 
         assertEquals("Apenas propriedades do tipo Casa permitem construção.", exception.getMessage());
 
         verify(propriedadeRepository).findById(companhia.getId());
         verify(jogadorService).findById(jogador.getId());
         verify(propriedadeRepository, never()).findBySalaIdAndCor(anyString(), any(CorPropriedade.class));
-        verify(jogadorService, never()).debitarSaldo(anyString(), anyDouble());
+        verify(jogadorService, never()).debitarSaldo(any(Jogador.class), anyDouble());
         verify(propriedadeRepository, never()).save(companhia);
     }
 
@@ -162,21 +159,20 @@ class PropriedadeServiceTest extends AbstractTest {
         }});
 
         ConstruirPropriedadeRequestDto requestDto = new ConstruirPropriedadeRequestDto();
-        requestDto.setPropriedadeId(casa.getId());
         requestDto.setJogadorId(jogador.getId());
 
         when(propriedadeRepository.findById(anyString())).thenReturn(Optional.of(casa));
         when(jogadorService.findById(jogador.getId())).thenReturn(jogador);
 
         RegraNegocialException exception = assertThrows(RegraNegocialException.class, () ->
-                propriedadeService.construirPropriedade(UUID.randomUUID().toString(), requestDto));
+                propriedadeService.construirPropriedade(UUID.randomUUID().toString(), casa.getId(), requestDto));
 
         assertEquals("Saldo insuficiente para construir.", exception.getMessage());
 
         verify(propriedadeRepository).findById(casa.getId());
         verify(jogadorService).findById(jogador.getId());
         verify(propriedadeRepository, never()).findBySalaIdAndCor(anyString(), any(CorPropriedade.class));
-        verify(jogadorService, never()).debitarSaldo(anyString(), anyDouble());
+        verify(jogadorService, never()).debitarSaldo(any(Jogador.class), anyDouble());
         verify(propriedadeRepository, never()).save(casa);
     }
 
@@ -189,7 +185,6 @@ class PropriedadeServiceTest extends AbstractTest {
         }});
 
         ConstruirPropriedadeRequestDto requestDto = new ConstruirPropriedadeRequestDto();
-        requestDto.setPropriedadeId(casa.getId());
         requestDto.setJogadorId(jogador.getId());
 
         when(propriedadeRepository.findById(anyString())).thenReturn(Optional.of(casa));
@@ -198,14 +193,14 @@ class PropriedadeServiceTest extends AbstractTest {
                 .thenReturn(Fixture.from(Casa.class).gimme(3, "casa"));
 
         RegraNegocialException exception = assertThrows(RegraNegocialException.class, () ->
-                propriedadeService.construirPropriedade(UUID.randomUUID().toString(), requestDto));
+                propriedadeService.construirPropriedade(UUID.randomUUID().toString(), casa.getId(), requestDto));
 
         assertEquals("Apenas propriedades do tipo Casa permitem construção.", exception.getMessage());
 
         verify(propriedadeRepository).findById(casa.getId());
         verify(jogadorService).findById(jogador.getId());
         verify(propriedadeRepository).findBySalaIdAndCor(anyString(), any(CorPropriedade.class));
-        verify(jogadorService, never()).debitarSaldo(anyString(), anyDouble());
+        verify(jogadorService, never()).debitarSaldo(any(Jogador.class), anyDouble());
         verify(propriedadeRepository, never()).save(casa);
     }
 
@@ -218,21 +213,20 @@ class PropriedadeServiceTest extends AbstractTest {
         }});
 
         ConstruirPropriedadeRequestDto requestDto = new ConstruirPropriedadeRequestDto();
-        requestDto.setPropriedadeId(casa.getId());
         requestDto.setJogadorId(jogador.getId());
 
         when(propriedadeRepository.findById(anyString())).thenReturn(Optional.of(casa));
         when(jogadorService.findById(jogador.getId())).thenReturn(jogador);
 
         RegraNegocialException exception = assertThrows(RegraNegocialException.class, () ->
-                propriedadeService.construirPropriedade(UUID.randomUUID().toString(), requestDto));
+                propriedadeService.construirPropriedade(UUID.randomUUID().toString(), casa.getId(), requestDto));
 
         assertEquals("Não é possível construir em propriedades hipotecadas.", exception.getMessage());
 
         verify(propriedadeRepository).findById(casa.getId());
         verify(jogadorService).findById(jogador.getId());
         verify(propriedadeRepository, never()).findBySalaIdAndCor(anyString(), any(CorPropriedade.class));
-        verify(jogadorService, never()).debitarSaldo(anyString(), anyDouble());
+        verify(jogadorService, never()).debitarSaldo(any(Jogador.class), anyDouble());
         verify(propriedadeRepository, never()).save(casa);
     }
 
@@ -245,21 +239,20 @@ class PropriedadeServiceTest extends AbstractTest {
         }});
 
         ConstruirPropriedadeRequestDto requestDto = new ConstruirPropriedadeRequestDto();
-        requestDto.setPropriedadeId(casa.getId());
         requestDto.setJogadorId(jogador.getId());
 
         when(propriedadeRepository.findById(anyString())).thenReturn(Optional.of(casa));
         when(jogadorService.findById(jogador.getId())).thenReturn(jogador);
 
         RegraNegocialException exception = assertThrows(RegraNegocialException.class, () ->
-                propriedadeService.construirPropriedade(UUID.randomUUID().toString(), requestDto));
+                propriedadeService.construirPropriedade(UUID.randomUUID().toString(), casa.getId(), requestDto));
 
         assertEquals("A propriedade já atingiu o limite de construções.", exception.getMessage());
 
         verify(propriedadeRepository).findById(casa.getId());
         verify(jogadorService).findById(jogador.getId());
         verify(propriedadeRepository, never()).findBySalaIdAndCor(anyString(), any(CorPropriedade.class));
-        verify(jogadorService, never()).debitarSaldo(anyString(), anyDouble());
+        verify(jogadorService, never()).debitarSaldo(any(Jogador.class), anyDouble());
         verify(propriedadeRepository, never()).save(casa);
     }
 

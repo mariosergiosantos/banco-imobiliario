@@ -7,17 +7,13 @@ import java.time.LocalDateTime;
 public class EmprestimoDto {
 
     private String id;
-    private String jogadorOrigemId;
-    private String jogadorDestinoId;
+    private String recebedorId;
+    private String pagadorId;
     private double valorContratado;
     private double valorDevolucao;
-
     private double saldoDevedor;
-
     private double taxaJuros;
-
     private StatusEmprestimo status;
-
     private LocalDateTime dataEmprestimo;
 
     public String getId() {
@@ -28,20 +24,20 @@ public class EmprestimoDto {
         this.id = id;
     }
 
-    public String getJogadorOrigemId() {
-        return jogadorOrigemId;
+    public String getRecebedorId() {
+        return recebedorId;
     }
 
-    public void setJogadorOrigemId(String jogadorOrigemId) {
-        this.jogadorOrigemId = jogadorOrigemId;
+    public void setRecebedorId(String recebedorId) {
+        this.recebedorId = recebedorId;
     }
 
-    public String getJogadorDestinoId() {
-        return jogadorDestinoId;
+    public String getPagadorId() {
+        return pagadorId;
     }
 
-    public void setJogadorDestinoId(String jogadorDestinoId) {
-        this.jogadorDestinoId = jogadorDestinoId;
+    public void setPagadorId(String pagadorId) {
+        this.pagadorId = pagadorId;
     }
 
     public double getValorContratado() {

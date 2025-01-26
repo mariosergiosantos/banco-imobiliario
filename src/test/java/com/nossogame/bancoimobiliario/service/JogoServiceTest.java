@@ -126,7 +126,7 @@ class JogoServiceTest extends AbstractTest {
         when(salaService.buscarSalaPorId(codigoSala)).thenReturn(sala);
         doCallRealMethod().when(gameValidation).endGameValidation(sala);
         when(jogadorService.buscarJogadoresPorSala(codigoSala)).thenReturn(Collections.singletonList(jogador));
-        when(emprestimoService.existsByJogadorDestinoAndStatus(jogador, StatusEmprestimo.PENDENTE)).thenReturn(false);
+        when(emprestimoService.existsByRecebedorAndStatus(jogador, StatusEmprestimo.PENDENTE)).thenReturn(false);
         when(propriedadeService.calcularValorTotalPropriedades(jogador)).thenReturn(1000.0);
         when(rankingService.registrarVitoria(jogador, sala)).thenReturn(RankingMapper.INSTANCE.toDto(ranking));
 
@@ -140,7 +140,7 @@ class JogoServiceTest extends AbstractTest {
         verify(salaService).buscarSalaPorId(codigoSala);
         verify(gameValidation).endGameValidation(sala);
         verify(jogadorService).buscarJogadoresPorSala(codigoSala);
-        verify(emprestimoService).existsByJogadorDestinoAndStatus(jogador, StatusEmprestimo.PENDENTE);
+        verify(emprestimoService).existsByRecebedorAndStatus(jogador, StatusEmprestimo.PENDENTE);
         verify(propriedadeService).calcularValorTotalPropriedades(jogador);
         verify(rankingService).registrarVitoria(jogador, sala);
     }
@@ -158,7 +158,7 @@ class JogoServiceTest extends AbstractTest {
         when(salaService.buscarSalaPorId(codigoSala)).thenReturn(sala);
         doCallRealMethod().when(gameValidation).endGameValidation(sala);
         when(jogadorService.buscarJogadoresPorSala(codigoSala)).thenReturn(Collections.singletonList(jogador));
-        when(emprestimoService.existsByJogadorDestinoAndStatus(jogador, StatusEmprestimo.PENDENTE)).thenReturn(true);
+        when(emprestimoService.existsByRecebedorAndStatus(jogador, StatusEmprestimo.PENDENTE)).thenReturn(true);
 
         RegraNegocialException exception = assertThrows(RegraNegocialException.class, () -> {
             jogoService.finalizar(codigoSala);
@@ -169,7 +169,7 @@ class JogoServiceTest extends AbstractTest {
         verify(salaService).buscarSalaPorId(codigoSala);
         verify(gameValidation).endGameValidation(sala);
         verify(jogadorService).buscarJogadoresPorSala(codigoSala);
-        verify(emprestimoService).existsByJogadorDestinoAndStatus(jogador, StatusEmprestimo.PENDENTE);
+        verify(emprestimoService).existsByRecebedorAndStatus(jogador, StatusEmprestimo.PENDENTE);
         verify(propriedadeService, never()).calcularValorTotalPropriedades(jogador);
         verify(rankingService, never()).registrarVitoria(jogador, sala);
     }

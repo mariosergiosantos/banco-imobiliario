@@ -86,7 +86,7 @@ public class JogoService {
     }
 
     private boolean temEmprestimoPendente(Jogador jogador) {
-        return emprestimoService.existsByJogadorDestinoAndStatus(jogador, StatusEmprestimo.PENDENTE);
+        return emprestimoService.existsByRecebedorAndStatus(jogador, StatusEmprestimo.PENDENTE);
     }
 
     private double calcularPatrimonioLiquido(Jogador jogador) {

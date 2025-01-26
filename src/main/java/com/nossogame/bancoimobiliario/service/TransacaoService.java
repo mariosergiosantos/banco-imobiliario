@@ -4,6 +4,7 @@ import com.nossogame.bancoimobiliario.dto.ComprarPropriedadeBancoRequestDto;
 import com.nossogame.bancoimobiliario.dto.ComprarPropriedadeJogadorRequestDto;
 import com.nossogame.bancoimobiliario.dto.PagamentoAluguelRequestDto;
 import com.nossogame.bancoimobiliario.dto.TransacaoDto;
+import com.nossogame.bancoimobiliario.dto.request.TransacaoRequestDto;
 import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
 import com.nossogame.bancoimobiliario.exception.ResourceNotFoundException;
 import com.nossogame.bancoimobiliario.factory.TransacaoFactory;
@@ -46,8 +47,18 @@ public class TransacaoService {
     @Autowired
     private Map<String, TransacaoStrategy> transacaoStrategies;
 
+    public TransacaoDto registrarTransacao(String salaId, TransacaoRequestDto transacaoRequest) throws ResourceNotFoundException, RegraNegocialException {
+
+        Sala sala = salaService.buscarSalaPorId(salaId);
+        Jogador jogador = jogadorService.buscarJodagor(transacaoRequest.getCompradorId(), salaId);
+        Propriedade propriedade = propriedadeService.buscarPropriedade(transacaoRequest.getPropriedadeId(), salaId);
+
+
+        return processarTransacao(transacaoRequest.getTipoTransacao().name(), sala, jogador, propriedade, transacaoRequest.getValor());
+    }
+
     @Transactional
-    public TransacaoDto processarTransacao(String tipo, Sala sala, Jogador jogador, Propriedade propriedade, double valor) throws ResourceNotFoundException, RegraNegocialException {
+    private TransacaoDto processarTransacao(String tipo, Sala sala, Jogador jogador, Propriedade propriedade, double valor) throws ResourceNotFoundException, RegraNegocialException {
         TransacaoStrategy strategy = transacaoStrategies.get(tipo);
         if (strategy == null) {
             throw new IllegalArgumentException("Tipo de transação inválido: " + tipo);
@@ -57,6 +68,7 @@ public class TransacaoService {
         return TransacaoMapper.INSTANCE.toDTO(transacao);
     }
 
+    @Deprecated
     @Transactional
     public TransacaoDto comprarPropriedadeBanco(String salaId, ComprarPropriedadeBancoRequestDto transacaoRequest) throws ResourceNotFoundException, RegraNegocialException {
         Sala sala = transactionValidation.validarSalaEmAndamento(salaId);
@@ -66,7 +78,7 @@ public class TransacaoService {
         transactionValidation.validarPropriedadeDisponivel(propriedade);
         transactionValidation.validarSaldo(comprador, propriedade.getValorCompra());
 
-        jogadorService.debitarSaldo(comprador.getId(), propriedade.getValorCompra());
+        jogadorService.debitarSaldo(comprador, propriedade.getValorCompra());
 
         propriedade.setDono(comprador);
         propriedadeService.atualizarPropriedade(propriedade);
@@ -78,6 +90,7 @@ public class TransacaoService {
         return TransacaoMapper.INSTANCE.toDTO(transacao);
     }
 
+    @Deprecated
     @Transactional
     public TransacaoDto comprarPropriedadeJogador(String salaId, ComprarPropriedadeJogadorRequestDto transacaoRequest) throws ResourceNotFoundException, RegraNegocialException {
         Sala sala = transactionValidation.validarSalaEmAndamento(salaId);
@@ -90,8 +103,8 @@ public class TransacaoService {
 
         propriedade.setDono(comprador);
 
-        jogadorService.debitarSaldo(comprador.getId(), transacaoRequest.getValor());
-        jogadorService.creditarSaldo(vendedor.getId(), transacaoRequest.getValor());
+        jogadorService.debitarSaldo(comprador, transacaoRequest.getValor());
+        jogadorService.creditarSaldo(vendedor, transacaoRequest.getValor());
 
         propriedadeService.atualizarPropriedade(propriedade);
 
@@ -102,13 +115,14 @@ public class TransacaoService {
         return TransacaoMapper.INSTANCE.toDTO(transacao);
     }
 
+    @Deprecated
     @Transactional
     public TransacaoDto pagamentoSalario(String salaId, String jogadorId) throws ResourceNotFoundException, RegraNegocialException {
         Jogador jogador = jogadorService.buscarJodagor(jogadorId, salaId);
 
         Sala sala = transactionValidation.validarSalaEmAndamento(jogador.getSala().getId());
 
-        jogadorService.creditarSaldo(jogador.getId(), SALARIO_JOGADOR);
+        jogadorService.creditarSaldo(jogador, SALARIO_JOGADOR);
 
         String descricao = "Pagamento de salário para " + jogador.getNome();
 
@@ -117,11 +131,7 @@ public class TransacaoService {
         return TransacaoMapper.INSTANCE.toDTO(transacao);
     }
 
-    public List<TransacaoDto> listarTransacoesDaSala(String salaId) {
-        return TransacaoMapper.INSTANCE.toDTO(transacaoRepository.findBySalaId(salaId)
-                .orElse(new ArrayList<>()));
-    }
-
+    @Deprecated
     @Transactional
     public TransacaoDto pagamentoAluguel(String salaId, PagamentoAluguelRequestDto requestDto)
             throws ResourceNotFoundException, RegraNegocialException {
@@ -150,15 +160,20 @@ public class TransacaoService {
             throw new RegraNegocialException("Saldo insuficiente para pagar o aluguel.");
         }
 
-        jogadorService.debitarSaldo(jogadorPagante.getId(), valorAluguel);
-        jogadorService.creditarSaldo(jogadorProprietario.getId(), valorAluguel);
+        jogadorService.debitarSaldo(jogadorPagante, valorAluguel);
+        jogadorService.creditarSaldo(jogadorProprietario, valorAluguel);
 
         Transacao transacao = TransacaoFactory.criarTransacaoPagamentoAluguel(sala, jogadorPagante, propriedade.getDono(), propriedade, "Pagamento de aluguel da propriedade: " + propriedade.getNome());
 
         return TransacaoMapper.INSTANCE.toDTO(transacao);
     }
 
-    public Transacao save(Transacao transacao)  {
+    public Transacao save(Transacao transacao) {
         return transacaoRepository.save(transacao);
+    }
+
+    public List<TransacaoDto> listarTransacoesDaSala(String salaId) {
+        return TransacaoMapper.INSTANCE.toDTO(transacaoRepository.findBySalaId(salaId)
+                .orElse(new ArrayList<>()));
     }
 }

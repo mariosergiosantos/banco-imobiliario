@@ -31,8 +31,8 @@ public class PagamentoAluguelStrategy implements TransacaoStrategy {
             throw new RegraNegocialException("Saldo insuficiente para pagar o aluguel.");
         }
 
-        jogadorService.debitarSaldo(pagador.getId(), valor);
-        jogadorService.creditarSaldo(recebedor.getId(), valor);
+        jogadorService.debitarSaldo(pagador, valor);
+        jogadorService.creditarSaldo(recebedor, valor);
 
         Transacao transacao = TransacaoFactory.criarTransacaoPagamentoAluguel(sala, pagador, recebedor, propriedade, "");
         return transacaoRepository.save(transacao);

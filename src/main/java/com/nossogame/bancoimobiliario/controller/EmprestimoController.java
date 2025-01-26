@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/emprestimos")
 public class EmprestimoController {
@@ -25,21 +27,26 @@ public class EmprestimoController {
         return ResponseEntity.ok(emprestimo);
     }
 
-    @PostMapping("/salas/{id}")
-    public ResponseEntity<EmprestimoDto> solicitarEmprestimo(@PathVariable String id, @Valid @RequestBody SolicitarEmprestimoDto dto) throws RegraNegocialException, ResourceNotFoundException {
+    @GetMapping("/salas/{salaId}")
+    public ResponseEntity<List<EmprestimoDto>> listarEmprestimosPorSala(@PathVariable String salaId) {
+        return null;
+    }
+
+    @PostMapping
+    public ResponseEntity<EmprestimoDto> solicitarEmprestimo(@Valid @RequestBody SolicitarEmprestimoDto dto) throws RegraNegocialException, ResourceNotFoundException {
         EmprestimoDto emprestimo = emprestimoService.solicitarEmprestimo(dto);
         return new ResponseEntity<>(emprestimo, HttpStatus.CREATED);
     }
 
     @PostMapping("/pagamento")
-    public ResponseEntity<String> pagarEmprestimo(@Valid @RequestBody PagarEmprestimoDto dto)
+    public ResponseEntity<Void> pagarEmprestimo(@Valid @RequestBody PagarEmprestimoDto dto)
             throws RegraNegocialException, ResourceNotFoundException {
         emprestimoService.pagarEmprestimo(
                 dto.getEmprestimoId(),
                 dto.getJogadorDestinoId(),
                 dto.getValor()
         );
-        return ResponseEntity.ok("Pagamento realizado com sucesso.");
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
 

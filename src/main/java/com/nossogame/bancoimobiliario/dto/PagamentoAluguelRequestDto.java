@@ -2,6 +2,7 @@ package com.nossogame.bancoimobiliario.dto;
 
 import jakarta.validation.constraints.NotNull;
 
+@Deprecated
 public class PagamentoAluguelRequestDto {
 
     @NotNull

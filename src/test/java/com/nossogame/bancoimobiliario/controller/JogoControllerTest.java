@@ -36,7 +36,7 @@ class JogoControllerTest extends AbstractTest {
     void deveIniciarJogoComSucesso() throws Exception {
         doNothing().when(jogoService).iniciar(codigoSala);
 
-        mockMvc.perform(post("/api/v1/jogo/salas/" + codigoSala + "/iniciar"))
+        mockMvc.perform(post("/api/v1/salas/" + codigoSala + "/iniciar"))
                 .andExpect(status().isOk());
     }
 
@@ -46,7 +46,7 @@ class JogoControllerTest extends AbstractTest {
         doThrow(new RegraNegocialException("Necessário ter ao menos 2 jogadores"))
                 .when(jogoService).iniciar(codigoSala);
 
-        mockMvc.perform(post("/api/v1/jogo/salas/" + codigoSala + "/iniciar"))
+        mockMvc.perform(post("/api/v1/salas/" + codigoSala + "/iniciar"))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.message").value("Necessário ter ao menos 2 jogadores"))
                 .andExpect(jsonPath("$.timestamp").exists())
@@ -57,7 +57,7 @@ class JogoControllerTest extends AbstractTest {
     void deveEncerrarJogoComSucesso() throws Exception {
         when(jogoService.finalizar(codigoSala)).thenReturn(new VencedorJogoDto());
 
-        mockMvc.perform(post("/api/v1/jogo/salas/" + codigoSala + "/finalizar"))
+        mockMvc.perform(post("/api/v1/salas/" + codigoSala + "/finalizar"))
                 .andExpect(status().isOk())
                 .andExpect(header().exists("X-Correlation-Id"));
     }
@@ -68,7 +68,7 @@ class JogoControllerTest extends AbstractTest {
         doThrow(new RegraNegocialException("Status da sala não permite finalizar jogo"))
                 .when(jogoService).finalizar(codigoSala);
 
-        mockMvc.perform(post("/api/v1/jogo/salas/" + codigoSala + "/finalizar"))
+        mockMvc.perform(post("/api/v1/salas/" + codigoSala + "/finalizar"))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.message").value("Status da sala não permite finalizar jogo"))
                 .andExpect(jsonPath("$.timestamp").exists())

@@ -16,12 +16,12 @@ public class PropriedadeController {
     @Autowired
     private PropriedadeService propriedadeService;
 
-    @PostMapping("/salas/{salaId}/propriedades/construir")
+    @PostMapping("/salas/{salaId}/propriedades/{propriedadeId}/construir")
     public ResponseEntity<TransacaoDto> construirPropriedade(
             @PathVariable String salaId,
-            @RequestBody ConstruirPropriedadeRequestDto requestDto)
-            throws ResourceNotFoundException, RegraNegocialException {
-        return ResponseEntity.ok(propriedadeService.construirPropriedade(salaId, requestDto));
+            @PathVariable String propriedadeId,
+            @RequestBody ConstruirPropriedadeRequestDto requestDto) throws ResourceNotFoundException, RegraNegocialException {
+        return ResponseEntity.ok(propriedadeService.construirPropriedade(salaId, propriedadeId, requestDto));
     }
 
 

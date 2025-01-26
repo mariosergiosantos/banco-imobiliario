@@ -1,5 +1,6 @@
 package com.nossogame.bancoimobiliario.dto;
 
+@Deprecated
 public class ComprarPropriedadeBancoRequestDto {
 
     private String idPropriedade;

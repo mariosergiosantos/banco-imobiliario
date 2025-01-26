@@ -97,11 +97,10 @@ class JogadorServiceTest extends AbstractTest {
     void deveCreditarSaldoComSucesso() throws ResourceNotFoundException {
         Jogador jogador = Fixture.from(Jogador.class).gimme("valido");
 
-        when(jogadorRepository.findById(jogador.getId())).thenReturn(Optional.of(jogador));
-
-        jogadorService.creditarSaldo(jogador.getId(), 2000);
+        jogadorService.creditarSaldo(jogador, 2000);
 
         verify(jogadorRepository).save(jogador);
+
         assertEquals(SALDO_INICIAL_JOGADOR + 2000, jogador.getSaldo());
     }
 
@@ -109,11 +108,10 @@ class JogadorServiceTest extends AbstractTest {
     void deveDebitarSaldoComSucesso() throws ResourceNotFoundException {
         Jogador jogador = Fixture.from(Jogador.class).gimme("valido");
 
-        when(jogadorRepository.findById(jogador.getId())).thenReturn(Optional.of(jogador));
-
-        jogadorService.debitarSaldo(jogador.getId(), 2000);
+        jogadorService.debitarSaldo(jogador, 2000);
 
         verify(jogadorRepository).save(jogador);
+
         assertEquals(SALDO_INICIAL_JOGADOR - 2000, jogador.getSaldo());
     }
 }

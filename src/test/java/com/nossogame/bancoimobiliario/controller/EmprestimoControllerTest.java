@@ -43,20 +43,21 @@ class EmprestimoControllerTest extends AbstractTest {
 
         when(emprestimoService.solicitarEmprestimo(any(SolicitarEmprestimoDto.class))).thenReturn(emprestimo);
 
-        mockMvc.perform(post("/api/v1/emprestimos/salas/" + sala.getId())
+        mockMvc.perform(post("/api/v1/emprestimos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                     {
-                                        "jogadorOrigemId": "JogadorA",
-                                        "jogadorDestinoId": "JogadorB",
+                                        "pagadorId": "JogadorA",
+                                        "recebedorId": "JogadorB",
                                         "valorContratado": 500,
-                                        "valorAcordado": 600
+                                        "valorAcordado": 600,
+                                        "salaId": "D5D48"
                                     }
                                 """))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(emprestimo.getId()))
-                .andExpect(jsonPath("$.jogadorOrigemId").value(emprestimo.getJogadorOrigemId()))
-                .andExpect(jsonPath("$.jogadorDestinoId").value(emprestimo.getJogadorDestinoId()))
+                .andExpect(jsonPath("$.pagadorId").value(emprestimo.getPagadorId()))
+                .andExpect(jsonPath("$.recebedorId").value(emprestimo.getRecebedorId()))
                 .andExpect(jsonPath("$.valorContratado").value(500))
                 .andExpect(jsonPath("$.valorDevolucao").value(600))
                 .andExpect(jsonPath("$.saldoDevedor").value(600))

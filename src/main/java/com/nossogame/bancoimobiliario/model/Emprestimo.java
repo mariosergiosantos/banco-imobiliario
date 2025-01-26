@@ -17,11 +17,11 @@ public class Emprestimo {
 
     @ManyToOne
     @JoinColumn(name = "jogador_origem_id", nullable = false)
-    private Jogador jogadorOrigem;
+    private Jogador recebedor;
 
     @ManyToOne
     @JoinColumn(name = "jogador_destino_id", nullable = false)
-    private Jogador jogadorDestino;
+    private Jogador pagador;
 
     @Column(nullable = false)
     private double valorContratado;
@@ -51,20 +51,20 @@ public class Emprestimo {
         this.id = id;
     }
 
-    public Jogador getJogadorOrigem() {
-        return jogadorOrigem;
+    public Jogador getRecebedor() {
+        return recebedor;
     }
 
-    public void setJogadorOrigem(Jogador jogadorOrigem) {
-        this.jogadorOrigem = jogadorOrigem;
+    public void setRecebedor(Jogador recebedor) {
+        this.recebedor = recebedor;
     }
 
-    public Jogador getJogadorDestino() {
-        return jogadorDestino;
+    public Jogador getPagador() {
+        return pagador;
     }
 
-    public void setJogadorDestino(Jogador jogadorDestino) {
-        this.jogadorDestino = jogadorDestino;
+    public void setPagador(Jogador pagador) {
+        this.pagador = pagador;
     }
 
     public double getValorContratado() {

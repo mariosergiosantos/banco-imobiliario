@@ -2,7 +2,7 @@
 CREATE TABLE Sala (
     id VARCHAR(7) NOT NULL PRIMARY KEY,
     data_criacao TIMESTAMP NOT NULL,
-    status ENUM('ABERTA', 'EM_ANDAMENTO', 'ENCERRADA') NOT NULL,
+    status ENUM('ABERTA', 'EM_ANDAMENTO', 'ENCERRADA') NOT NULL DEFAULT 'ABERTA',
     administrador_id UUID
 );
 
@@ -59,7 +59,7 @@ CREATE TABLE Emprestimo (
     valor_acordado DOUBLE NOT NULL,
     saldo_devedor DOUBLE NOT NULL,
     data_emprestimo TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    status ENUM('PENDENTE', 'ENCERRADO') NOT NULL
+    status ENUM('PENDENTE', 'ENCERRADO') NOT NULL DEFAULT 'PENDENTE'
 );
 
 --CREATE TABLE ConfiguracaoSala (

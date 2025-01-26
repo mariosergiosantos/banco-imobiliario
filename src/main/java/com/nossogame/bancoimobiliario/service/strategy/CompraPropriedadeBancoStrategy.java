@@ -31,14 +31,16 @@ public class CompraPropriedadeBancoStrategy implements TransacaoStrategy {
 
     @Override
     public Transacao executar(Sala sala, Jogador jogador, Propriedade propriedade, double valor) throws RegraNegocialException, ResourceNotFoundException {
+
         if (propriedade.getDono() != null) {
             throw new RegraNegocialException("Propriedade já pertence a um jogador.");
         }
+
         if (jogador.getSaldo() < propriedade.getValorCompra()) {
             throw new RegraNegocialException("Saldo insuficiente para comprar a propriedade.");
         }
 
-        jogadorService.debitarSaldo(jogador.getId(), propriedade.getValorCompra());
+        jogadorService.debitarSaldo(jogador, propriedade.getValorCompra());
         propriedade.setDono(jogador);
         propriedadeService.atualizarPropriedade(propriedade);
 

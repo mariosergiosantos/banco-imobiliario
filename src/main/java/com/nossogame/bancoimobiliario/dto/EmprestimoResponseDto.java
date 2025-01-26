@@ -3,17 +3,17 @@ package com.nossogame.bancoimobiliario.dto;
 public class EmprestimoResponseDto {
 
     private String id;
-    private String jogadorOrigemId;
-    private String jogadorDestinoId;
+    private String recebedorId;
+    private String pagadorId;
     private double valor;
     private Double taxaJuros;
     private String dataVencimento;
     private String status;
 
-    public EmprestimoResponseDto(String id, String jogadorOrigemId, String jogadorDestinoId, double valor, Double taxaJuros, String dataVencimento, String status) {
+    public EmprestimoResponseDto(String id, String recebedorId, String pagadorId, double valor, Double taxaJuros, String dataVencimento, String status) {
         this.id = id;
-        this.jogadorOrigemId = jogadorOrigemId;
-        this.jogadorDestinoId = jogadorDestinoId;
+        this.recebedorId = recebedorId;
+        this.pagadorId = pagadorId;
         this.valor = valor;
         this.taxaJuros = taxaJuros;
         this.dataVencimento = dataVencimento;
@@ -24,12 +24,12 @@ public class EmprestimoResponseDto {
         return id;
     }
 
-    public String getJogadorOrigemId() {
-        return jogadorOrigemId;
+    public String getRecebedorId() {
+        return recebedorId;
     }
 
-    public String getJogadorDestinoId() {
-        return jogadorDestinoId;
+    public String getPagadorId() {
+        return pagadorId;
     }
 
     public double getValor() {

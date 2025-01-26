@@ -11,8 +11,8 @@ public interface EmprestimoMapper {
 
     EmprestimoMapper INSTANCE = Mappers.getMapper(EmprestimoMapper.class);
 
-    @Mapping(source = "jogadorOrigem.id", target = "jogadorOrigemId")
-    @Mapping(source = "jogadorDestino.id", target = "jogadorDestinoId")
+    @Mapping(source = "pagador.id", target = "pagadorId")
+    @Mapping(source = "recebedor.id", target = "recebedorId")
     EmprestimoDto toDTO(Emprestimo emprestimo);
 
 }

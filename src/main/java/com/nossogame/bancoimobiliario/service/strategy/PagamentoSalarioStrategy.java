@@ -24,7 +24,7 @@ public class PagamentoSalarioStrategy implements TransacaoStrategy {
 
     @Override
     public Transacao executar(Sala sala, Jogador jogador, Propriedade propriedade, double valor) throws ResourceNotFoundException {
-        jogadorService.creditarSaldo(jogador.getId(), valor);
+        jogadorService.creditarSaldo(jogador, valor);
 
         String descricao = "Pagamento de salário para " + jogador.getNome();
         Transacao transacao = TransacaoFactory.criarPagamentoSalario(sala, jogador, SALARIO_JOGADOR, descricao);

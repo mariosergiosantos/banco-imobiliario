@@ -26,24 +26,24 @@ public class EmprestimoService {
 
     @Transactional
     public EmprestimoDto solicitarEmprestimo(SolicitarEmprestimoDto dto) throws RegraNegocialException, ResourceNotFoundException {
-        Jogador jogadorOrigem = jogadorService.findById(dto.getJogadorOrigemId());
+        Jogador pagador = jogadorService.findById(dto.getPagadorId());
 
-        if (jogadorOrigem.getSaldo() < dto.getValorContratado()) {
+        if (pagador.getSaldo() < dto.getValorContratado()) {
             throw new RegraNegocialException("O jogador não possui saldo suficiente para conceder o empréstimo.");
         }
 
-        Jogador jogadorDestino = jogadorService.findById(dto.getJogadorDestinoId());
+        Jogador recebedor = jogadorService.findById(dto.getRecebedorId());
 
         if (dto.getValorAcordado() < dto.getValorContratado()) {
             throw new RegraNegocialException("O valor acordado não pode ser menor que o valor contratado.");
         }
 
-        jogadorService.debitarSaldo(jogadorOrigem.getId(), dto.getValorContratado());
-        jogadorService.creditarSaldo(jogadorDestino.getId(), dto.getValorAcordado());
+        jogadorService.debitarSaldo(pagador, dto.getValorContratado());
+        jogadorService.creditarSaldo(recebedor, dto.getValorAcordado());
 
         Emprestimo emprestimo = new Emprestimo();
-        emprestimo.setJogadorOrigem(jogadorOrigem);
-        emprestimo.setJogadorDestino(jogadorDestino);
+        emprestimo.setRecebedor(recebedor);
+        emprestimo.setPagador(pagador);
         emprestimo.setValorContratado(dto.getValorContratado());
         emprestimo.setValorDevolucao(dto.getValorAcordado());
         emprestimo.setSaldoDevedor(dto.getValorAcordado());
@@ -64,14 +64,14 @@ public class EmprestimoService {
             throw new RegraNegocialException("O empréstimo já foi encerrado.");
         }
 
-        if (!emprestimo.getJogadorDestino().getId().equals(jogadorDestinoId)) {
+        if (!emprestimo.getPagador().getId().equals(jogadorDestinoId)) {
             throw new RegraNegocialException("O jogador informado não é o devedor deste empréstimo.");
         }
 
-        Jogador jogadorDestino = emprestimo.getJogadorDestino();
-        Jogador jogadorOrigem = emprestimo.getJogadorOrigem();
+        Jogador pagador = emprestimo.getPagador();
+        Jogador recebedor = emprestimo.getRecebedor();
 
-        if (jogadorDestino.getSaldo() < valor) {
+        if (pagador.getSaldo() < valor) {
             throw new RegraNegocialException("Saldo insuficiente para realizar o pagamento.");
         }
 
@@ -79,8 +79,8 @@ public class EmprestimoService {
             throw new RegraNegocialException("O valor do pagamento excede o saldo devedor.");
         }
 
-        jogadorService.debitarSaldo(jogadorDestino.getId(), valor);
-        jogadorService.creditarSaldo(jogadorOrigem.getId(), valor);
+        jogadorService.debitarSaldo(pagador, valor);
+        jogadorService.creditarSaldo(recebedor, valor);
 
         emprestimo.setSaldoDevedor(emprestimo.getSaldoDevedor() - valor);
 
@@ -93,8 +93,8 @@ public class EmprestimoService {
     }
 
 
-    public boolean existsByJogadorDestinoAndStatus(Jogador jogador, StatusEmprestimo statusEmprestimo) {
-        return emprestimoRepository.existsByJogadorDestinoAndStatus(jogador, statusEmprestimo);
+    public boolean existsByRecebedorAndStatus(Jogador jogador, StatusEmprestimo statusEmprestimo) {
+        return emprestimoRepository.existsByRecebedorAndStatus(jogador, statusEmprestimo);
     }
 
     public EmprestimoDto buscarEmprestimoPorId(String id) throws ResourceNotFoundException {

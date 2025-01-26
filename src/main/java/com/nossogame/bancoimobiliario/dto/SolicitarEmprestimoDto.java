@@ -5,11 +5,13 @@ import jakarta.validation.constraints.Positive;
 
 public class SolicitarEmprestimoDto {
 
-    @NotNull
-    private String jogadorOrigemId;
+    private String salaId;
 
     @NotNull
-    private String jogadorDestinoId;
+    private String recebedorId;
+
+    @NotNull
+    private String pagadorId;
 
     @Positive
     private double valorContratado;
@@ -18,21 +20,28 @@ public class SolicitarEmprestimoDto {
     @Positive
     private double valorAcordado;
 
-
-    public String getJogadorOrigemId() {
-        return jogadorOrigemId;
+    public String getSalaId() {
+        return salaId;
     }
 
-    public void setJogadorOrigemId(String jogadorOrigemId) {
-        this.jogadorOrigemId = jogadorOrigemId;
+    public void setSalaId(String salaId) {
+        this.salaId = salaId;
     }
 
-    public String getJogadorDestinoId() {
-        return jogadorDestinoId;
+    public String getRecebedorId() {
+        return recebedorId;
     }
 
-    public void setJogadorDestinoId(String jogadorDestinoId) {
-        this.jogadorDestinoId = jogadorDestinoId;
+    public void setRecebedorId(String recebedorId) {
+        this.recebedorId = recebedorId;
+    }
+
+    public String getPagadorId() {
+        return pagadorId;
+    }
+
+    public void setPagadorId(String pagadorId) {
+        this.pagadorId = pagadorId;
     }
 
     public double getValorContratado() {

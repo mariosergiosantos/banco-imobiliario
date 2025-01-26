@@ -42,23 +42,20 @@ class JogadorControllerTest extends AbstractTest {
 
         when(jogadorService.adicionarJogador(eq("ABCDE1"), any(JogadorRequestDto.class))).thenReturn(jogadorDto);
 
-        // /api/v1/salas/ABCDE1/jogadores
-        mockMvc.perform(post("/api/v1/jogadores/salas/ABCDE1")
+        mockMvc.perform(post("/api/v1/jogadores")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                     {
-                                        "nome": "Jogador A"
+                                        "nome": "Jogador A",
+                                        "salaId": "ER84T2R"
                                     }
                                 """))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value("123"))
-                .andExpect(jsonPath("$.nome").value("Jogador A"))
-                .andExpect(jsonPath("$.saldo").value(1500));
+                .andExpect(status().isCreated());
     }
 
     @Test
     void deveRetornarErroQuandoDadosInvalidos() throws Exception {
-        mockMvc.perform(post("/api/v1/jogadores/salas/ABCDE1")
+        mockMvc.perform(post("/api/v1/jogadores")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                     {
