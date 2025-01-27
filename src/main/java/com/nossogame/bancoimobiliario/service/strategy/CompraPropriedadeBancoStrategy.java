@@ -30,21 +30,26 @@ public class CompraPropriedadeBancoStrategy implements TransacaoStrategy {
     private TransactionValidation transactionValidation;
 
     @Override
-    public Transacao executar(Sala sala, Jogador jogador, Propriedade propriedade, double valor) throws RegraNegocialException, ResourceNotFoundException {
+    public Transacao executar(Sala sala, Jogador comprador, Propriedade propriedade, double valor)
+            throws RegraNegocialException {
 
-        if (propriedade.getDono() != null) {
-            throw new RegraNegocialException("Propriedade já pertence a um jogador.");
-        }
+        transactionValidation.validarPropriedadeDisponivel(propriedade);
+        transactionValidation.validarSaldo(comprador, propriedade.getValorCompra());
 
-        if (jogador.getSaldo() < propriedade.getValorCompra()) {
-            throw new RegraNegocialException("Saldo insuficiente para comprar a propriedade.");
-        }
+        jogadorService.debitarSaldo(comprador, propriedade.getValorCompra());
 
-        jogadorService.debitarSaldo(jogador, propriedade.getValorCompra());
-        propriedade.setDono(jogador);
+        propriedade.setDono(comprador);
+
         propriedadeService.atualizarPropriedade(propriedade);
 
-        Transacao transacao = TransacaoFactory.criarCompraPropriedadeBanco(sala, jogador, propriedade, "");
+        String descricao = String.format(
+                "Compra da propriedade %s efetuada por %s com valor %.2f",
+                propriedade.getNome(),
+                comprador.getNome(),
+                propriedade.getValorCompra()
+        );
+
+        Transacao transacao = TransacaoFactory.criarCompraPropriedadeBanco(sala, comprador, propriedade, descricao);
         return transacaoRepository.save(transacao);
     }
 }

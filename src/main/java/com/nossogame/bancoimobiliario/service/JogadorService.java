@@ -82,12 +82,12 @@ public class JogadorService {
         return jogadorRepository.save(jogador);
     }
 
-    public Jogador debitarSaldo(Jogador jogador, double saldo) throws ResourceNotFoundException {
+    public Jogador debitarSaldo(Jogador jogador, double saldo) {
         jogador.setSaldo(jogador.getSaldo() - saldo);
         return jogadorRepository.save(jogador);
     }
 
-    public Jogador creditarSaldo(Jogador jogador, double saldo) throws ResourceNotFoundException {
+    public Jogador creditarSaldo(Jogador jogador, double saldo) {
         jogador.setSaldo(jogador.getSaldo() + saldo);
         return jogadorRepository.save(jogador);
     }

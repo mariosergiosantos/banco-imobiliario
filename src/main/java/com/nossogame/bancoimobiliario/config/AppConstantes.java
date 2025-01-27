@@ -10,5 +10,5 @@ public class AppConstantes {
 
     public static final int QUANTIDADE_MAXIMA_JOGADORES = 8;
 
-    public static final int SALARIO_JOGADOR = 200000;
+    public static final double SALARIO_JOGADOR = 200000;
 }

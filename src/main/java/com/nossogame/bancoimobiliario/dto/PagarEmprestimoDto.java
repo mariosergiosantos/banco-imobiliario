@@ -6,20 +6,17 @@ import jakarta.validation.constraints.Positive;
 public class PagarEmprestimoDto {
 
     @NotNull
-    private String jogadorDestinoId;
+    private String pagadorId;
 
     @Positive
     private double valor;
 
-    @NotNull
-    private String emprestimoId;
-
-    public String getJogadorDestinoId() {
-        return jogadorDestinoId;
+    public String getPagadorId() {
+        return pagadorId;
     }
 
-    public void setJogadorDestinoId(String jogadorDestinoId) {
-        this.jogadorDestinoId = jogadorDestinoId;
+    public void setPagadorId(String pagadorId) {
+        this.pagadorId = pagadorId;
     }
 
     public double getValor() {
@@ -28,13 +25,5 @@ public class PagarEmprestimoDto {
 
     public void setValor(double valor) {
         this.valor = valor;
-    }
-
-    public String getEmprestimoId() {
-        return emprestimoId;
-    }
-
-    public void setEmprestimoId(String emprestimoId) {
-        this.emprestimoId = emprestimoId;
     }
 }

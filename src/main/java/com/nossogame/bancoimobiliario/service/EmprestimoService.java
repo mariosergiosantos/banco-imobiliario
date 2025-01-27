@@ -4,10 +4,14 @@ import com.nossogame.bancoimobiliario.dto.EmprestimoDto;
 import com.nossogame.bancoimobiliario.dto.SolicitarEmprestimoDto;
 import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
 import com.nossogame.bancoimobiliario.exception.ResourceNotFoundException;
+import com.nossogame.bancoimobiliario.factory.TransacaoFactory;
 import com.nossogame.bancoimobiliario.mapper.EmprestimoMapper;
 import com.nossogame.bancoimobiliario.model.Emprestimo;
 import com.nossogame.bancoimobiliario.model.Jogador;
+import com.nossogame.bancoimobiliario.model.Sala;
+import com.nossogame.bancoimobiliario.model.Transacao;
 import com.nossogame.bancoimobiliario.model.enuns.StatusEmprestimo;
+import com.nossogame.bancoimobiliario.model.enuns.StatusSala;
 import com.nossogame.bancoimobiliario.repository.EmprestimoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,39 +28,62 @@ public class EmprestimoService {
     @Autowired
     private EmprestimoRepository emprestimoRepository;
 
-    @Transactional
-    public EmprestimoDto solicitarEmprestimo(SolicitarEmprestimoDto dto) throws RegraNegocialException, ResourceNotFoundException {
-        Jogador pagador = jogadorService.findById(dto.getPagadorId());
+    @Autowired
+    private TransacaoService transacaoService;
 
-        if (pagador.getSaldo() < dto.getValorContratado()) {
+    @Autowired
+    private SalaService salaService;
+
+    @Transactional
+    public EmprestimoDto solicitarEmprestimo(SolicitarEmprestimoDto solicitacaoEmprestimo) throws RegraNegocialException, ResourceNotFoundException {
+
+        Sala sala = salaService.buscarSalaPorId(solicitacaoEmprestimo.getSalaId());
+        if (!sala.getStatus().equals(StatusSala.EM_ANDAMENTO)) {
+            throw new RegraNegocialException("Sala não está disponível para realizar transações.");
+        }
+
+        Jogador pagador = jogadorService.findById(solicitacaoEmprestimo.getPagadorId());
+
+        if (pagador.getSaldo() < solicitacaoEmprestimo.getValorContratado()) {
             throw new RegraNegocialException("O jogador não possui saldo suficiente para conceder o empréstimo.");
         }
 
-        Jogador recebedor = jogadorService.findById(dto.getRecebedorId());
+        Jogador recebedor = jogadorService.findById(solicitacaoEmprestimo.getRecebedorId());
 
-        if (dto.getValorAcordado() < dto.getValorContratado()) {
+        if (solicitacaoEmprestimo.getValorAcordado() < solicitacaoEmprestimo.getValorContratado()) {
             throw new RegraNegocialException("O valor acordado não pode ser menor que o valor contratado.");
         }
 
-        jogadorService.debitarSaldo(pagador, dto.getValorContratado());
-        jogadorService.creditarSaldo(recebedor, dto.getValorAcordado());
+        jogadorService.debitarSaldo(pagador, solicitacaoEmprestimo.getValorContratado());
+        jogadorService.creditarSaldo(recebedor, solicitacaoEmprestimo.getValorAcordado());
 
         Emprestimo emprestimo = new Emprestimo();
         emprestimo.setRecebedor(recebedor);
         emprestimo.setPagador(pagador);
-        emprestimo.setValorContratado(dto.getValorContratado());
-        emprestimo.setValorDevolucao(dto.getValorAcordado());
-        emprestimo.setSaldoDevedor(dto.getValorAcordado());
+        emprestimo.setSala(sala);
+        emprestimo.setValorContratado(solicitacaoEmprestimo.getValorContratado());
+        emprestimo.setValorDevolucao(solicitacaoEmprestimo.getValorAcordado());
+        emprestimo.setSaldoDevedor(solicitacaoEmprestimo.getValorAcordado());
         emprestimo.setStatus(StatusEmprestimo.PENDENTE);
         emprestimo.setDataEmprestimo(LocalDateTime.now());
 
-        //TODO registra a transação
+        String descricao = String.format(
+                "Empréstimo de %.2f solicitado por %s para %s",
+                solicitacaoEmprestimo.getValorContratado(),
+                pagador.getNome(),
+                recebedor.getNome()
+        );
+
+        Transacao transacao = TransacaoFactory.criarTransacaoEmprestimo(sala, pagador, recebedor, solicitacaoEmprestimo.getValorAcordado(), descricao);
+
+        transacaoService.save(transacao);
+
         return EmprestimoMapper.INSTANCE.toDTO(emprestimoRepository.save(emprestimo));
     }
 
 
     @Transactional
-    public EmprestimoDto pagarEmprestimo(String emprestimoId, String jogadorDestinoId, double valor) throws ResourceNotFoundException, RegraNegocialException {
+    public EmprestimoDto pagarEmprestimo(String emprestimoId, String pagadorId, double valor) throws ResourceNotFoundException, RegraNegocialException {
         Emprestimo emprestimo = emprestimoRepository.findById(emprestimoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Empréstimo não encontrado."));
 
@@ -64,11 +91,11 @@ public class EmprestimoService {
             throw new RegraNegocialException("O empréstimo já foi encerrado.");
         }
 
-        if (!emprestimo.getPagador().getId().equals(jogadorDestinoId)) {
+        if (!emprestimo.getPagador().getId().equals(pagadorId)) {
             throw new RegraNegocialException("O jogador informado não é o devedor deste empréstimo.");
         }
 
-        Jogador pagador = emprestimo.getPagador();
+        Jogador pagador = jogadorService.findById(pagadorId);
         Jogador recebedor = emprestimo.getRecebedor();
 
         if (pagador.getSaldo() < valor) {
@@ -88,7 +115,17 @@ public class EmprestimoService {
             emprestimo.setStatus(StatusEmprestimo.ENCERRADO);
         }
 
-        // TODO registra a transação
+        String descricao = String.format(
+                "Pagamento de %.2f realizado por %s para %s",
+                valor,
+                pagador.getNome(),
+                recebedor.getNome()
+        );
+
+        Transacao transacao = TransacaoFactory.criarTransacaoPagarEmprestimo(emprestimo.getSala(), pagador, recebedor, valor, descricao);
+
+        transacaoService.save(transacao);
+
         return EmprestimoMapper.INSTANCE.toDTO(emprestimoRepository.save(emprestimo));
     }
 

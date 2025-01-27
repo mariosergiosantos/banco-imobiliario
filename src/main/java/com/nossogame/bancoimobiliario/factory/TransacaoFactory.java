@@ -18,15 +18,23 @@ public class TransacaoFactory {
         return new Transacao(sala, comprador, vendedor, propriedade, TipoTransacao.COMPRA_PROPRIEDADE_JOGADOR, valor, descricao);
     }
 
-    public static Transacao criarTransacaoPagamentoAluguel(Sala sala, Jogador pagador, Jogador recebedor, Propriedade propriedade, String descricao) {
-        return new Transacao(sala, pagador, recebedor, propriedade, TipoTransacao.PAGAMENTO_ALUGUEL, propriedade.getValorAluguelAtual(), descricao);
+    public static Transacao criarTransacaoPagamentoAluguel(Sala sala, Jogador pagador, Jogador recebedor, Propriedade propriedade, double valor, String descricao) {
+        return new Transacao(sala, pagador, recebedor, propriedade, TipoTransacao.PAGAMENTO_ALUGUEL, valor, descricao);
     }
 
     public static Transacao criarPagamentoSalario(Sala sala, Jogador jogador, double salario, String descricao) {
         return new Transacao(sala, jogador, null, null, TipoTransacao.PAGAMENTO_SALARIO, salario, descricao);
     }
 
-    public static Transacao criarTransacaoContruirPropriedade(Sala sala, Jogador pagador, Propriedade propriedade, double valor, String descricao) {
-        return new Transacao(sala, pagador, null, propriedade, TipoTransacao.CONSTRUIR_PROPRIEDADE, valor, descricao);
+    public static Transacao criarTransacaoContruirPropriedade(Sala sala, Jogador jogador, Propriedade propriedade, double valor, String descricao) {
+        return new Transacao(sala, jogador, null, propriedade, TipoTransacao.CONSTRUIR_PROPRIEDADE, valor, descricao);
+    }
+
+    public static Transacao criarTransacaoEmprestimo(Sala sala, Jogador pagador, Jogador recebedor, double valor, String descricao) {
+        return new Transacao(sala, pagador, recebedor, null, TipoTransacao.EMPRESTIMO, valor, descricao);
+    }
+
+    public static Transacao criarTransacaoPagarEmprestimo(Sala sala, Jogador pagador, Jogador recebedor, double valor, String descricao) {
+        return new Transacao(sala, pagador, recebedor, null, TipoTransacao.PAGAMENTO_EMPRESTIMO, valor, descricao);
     }
 }

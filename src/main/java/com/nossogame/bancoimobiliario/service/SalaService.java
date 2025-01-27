@@ -50,8 +50,7 @@ public class SalaService {
     }
 
     public SalaDto buscarSala(String id) throws ResourceNotFoundException {
-        Sala sala = salaRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Sala não encontrada"));
+        Sala sala = buscarSalaPorId(id);
         return SalaMapper.INSTANCE.toDTO(sala);
     }
 

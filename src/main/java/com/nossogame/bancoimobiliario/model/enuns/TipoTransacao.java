@@ -8,5 +8,7 @@ public enum TipoTransacao {
     PAGAMENTO_ALUGUEL,
     HIPOTECA,
     PAGAMENTO_SALARIO,
-    FALENCIA
+    FALENCIA,
+    EMPRESTIMO,
+    PAGAMENTO_EMPRESTIMO
 }

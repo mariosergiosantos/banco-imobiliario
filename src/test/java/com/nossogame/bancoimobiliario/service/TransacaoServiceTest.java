@@ -1,21 +1,6 @@
 package com.nossogame.bancoimobiliario.service;
 
-import com.nossogame.bancoimobiliario.dto.ComprarPropriedadeBancoRequestDto;
-import com.nossogame.bancoimobiliario.dto.TransacaoDto;
-import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
-import com.nossogame.bancoimobiliario.exception.ResourceNotFoundException;
-import com.nossogame.bancoimobiliario.model.Jogador;
-import com.nossogame.bancoimobiliario.model.Propriedade;
-import com.nossogame.bancoimobiliario.repository.TransacaoRepository;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 //TODO teste só sera feito depois de implementar o strategy
 /*@ExtendWith(MockitoExtension.class)

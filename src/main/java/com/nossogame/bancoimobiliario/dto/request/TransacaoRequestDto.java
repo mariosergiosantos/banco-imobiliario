@@ -1,5 +1,6 @@
 package com.nossogame.bancoimobiliario.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.nossogame.bancoimobiliario.model.enuns.TipoTransacao;
 import jakarta.validation.constraints.NotNull;
 
@@ -10,6 +11,7 @@ public class TransacaoRequestDto {
 
     private String propriedadeId;
 
+    @JsonAlias({"compradorId", "jogadorId"})
     private String compradorId;
 
     private double valor;

@@ -16,6 +16,10 @@ public class Emprestimo {
     private String id;
 
     @ManyToOne
+    @JoinColumn(name = "sala_id", nullable = false)
+    private Sala sala;
+
+    @ManyToOne
     @JoinColumn(name = "jogador_origem_id", nullable = false)
     private Jogador recebedor;
 
@@ -32,8 +36,8 @@ public class Emprestimo {
     @Column(nullable = false)
     private double saldoDevedor;
 
-    @Column
-    private double taxaJuros;
+    /*@Column
+    private double taxaJuros;*/
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -49,6 +53,14 @@ public class Emprestimo {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Sala getSala() {
+        return sala;
+    }
+
+    public void setSala(Sala sala) {
+        this.sala = sala;
     }
 
     public Jogador getRecebedor() {
@@ -91,13 +103,13 @@ public class Emprestimo {
         this.saldoDevedor = saldoDevedor;
     }
 
-    public double getTaxaJuros() {
+    /*public double getTaxaJuros() {
         return taxaJuros;
     }
 
     public void setTaxaJuros(double taxaJuros) {
         this.taxaJuros = taxaJuros;
-    }
+    }*/
 
     public StatusEmprestimo getStatus() {
         return status;

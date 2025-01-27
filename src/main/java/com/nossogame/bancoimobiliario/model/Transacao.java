@@ -42,8 +42,10 @@ public class Transacao {
     @CreatedDate
     private LocalDateTime dataHora;
 
-    @Column(length = 255)
+    @Column
     private String descricao;
+
+    public Transacao() {}
 
     public Transacao(Sala sala, Jogador comprador, Jogador vendedor, Propriedade propriedade, TipoTransacao tipo, double valor, String descricao) {
         this.sala = sala;

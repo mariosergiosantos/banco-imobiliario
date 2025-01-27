@@ -22,7 +22,7 @@ public class EmprestimoController {
     private EmprestimoService emprestimoService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmprestimoDto> buscarEmprestimo(@PathVariable String id) throws RegraNegocialException, ResourceNotFoundException {
+    public ResponseEntity<EmprestimoDto> buscarEmprestimo(@PathVariable String id) throws ResourceNotFoundException {
         EmprestimoDto emprestimo = emprestimoService.buscarEmprestimoPorId(id);
         return ResponseEntity.ok(emprestimo);
     }
@@ -38,12 +38,12 @@ public class EmprestimoController {
         return new ResponseEntity<>(emprestimo, HttpStatus.CREATED);
     }
 
-    @PostMapping("/pagamento")
-    public ResponseEntity<Void> pagarEmprestimo(@Valid @RequestBody PagarEmprestimoDto dto)
+    @PostMapping("/{id}/pagamento")
+    public ResponseEntity<Void> pagarEmprestimo(@PathVariable String id, @Valid @RequestBody PagarEmprestimoDto dto)
             throws RegraNegocialException, ResourceNotFoundException {
         emprestimoService.pagarEmprestimo(
-                dto.getEmprestimoId(),
-                dto.getJogadorDestinoId(),
+                id,
+                dto.getPagadorId(),
                 dto.getValor()
         );
         return new ResponseEntity<>(HttpStatus.CREATED);
