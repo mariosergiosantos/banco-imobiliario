@@ -1,21 +1,21 @@
 -- Criação das tabelas
-CREATE TABLE Sala (
+CREATE TABLE sala (
     id VARCHAR(7) NOT NULL PRIMARY KEY,
     data_criacao TIMESTAMP NOT NULL,
     status ENUM('ABERTA', 'EM_ANDAMENTO', 'ENCERRADA') NOT NULL DEFAULT 'ABERTA',
-    administrador_id UUID
+    administrador_id CHAR(36)
 );
 
-CREATE TABLE Jogador (
-    id UUID NOT NULL PRIMARY KEY,
+CREATE TABLE jogador (
+    id CHAR(36) NOT NULL PRIMARY KEY,
     nome VARCHAR(50) NOT NULL,
     saldo DOUBLE NOT NULL,
     sala_id VARCHAR(7),
     is_admin BOOLEAN NOT NULL
 );
 
-CREATE TABLE Propriedade (
-    id UUID NOT NULL PRIMARY KEY,
+CREATE TABLE propriedade (
+    id CHAR(36) NOT NULL PRIMARY KEY,
     nome VARCHAR(50) NOT NULL,
     cor ENUM('ROXO', 'CIANO', 'ROSA', 'LARANJA', 'VERMELHO', 'AMARELO', 'VERDE', 'AZUL'),
     valor_compra DOUBLE NOT NULL,
@@ -24,25 +24,25 @@ CREATE TABLE Propriedade (
     hotel BOOLEAN NOT NULL DEFAULT FALSE,
     valor_aluguel_atual DOUBLE NOT NULL,
     hipotecada BOOLEAN NOT NULL DEFAULT FALSE,
-    is_companhia BOOLEAN NOT NULL DEFAULT FALSE,
-    dono_id UUID,
+    companhia BOOLEAN NOT NULL DEFAULT FALSE,
+    dono_id CHAR(36),
     sala_id VARCHAR(7) NOT NULL,
     tipo_propriedade VARCHAR(31) NOT NULL
 );
 
-CREATE TABLE Transacao (
-    id UUID NOT NULL PRIMARY KEY,
+CREATE TABLE transacao (
+    id CHAR(36) NOT NULL PRIMARY KEY,
     sala_id VARCHAR(7) NOT NULL,
-    origem_id UUID,
-    destino_id UUID,
-    propriedade_id UUID,
+    origem_id CHAR(36),
+    destino_id CHAR(36),
+    propriedade_id CHAR(36),
     valor DOUBLE NOT NULL,
     tipo ENUM('COMPRA_PROPRIEDADE_DO_BANCO', 'COMPRA_PROPRIEDADE_JOGADOR', 'CONSTRUIR_PROPRIEDADE', 'PAGAMENTO_ALUGUEL', 'HIPOTECA', 'PAGAMENTO_SALARIO', 'EMPRESTIMO', 'PAGAMENTO_EMPRESTIMO') NOT NULL,
     data_hora TIMESTAMP NOT NULL,
     descricao VARCHAR(100)
 );
 
-CREATE TABLE Ranking (
+CREATE TABLE ranking (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     jogador_id VARCHAR(50) NOT NULL,
     saldo_final DOUBLE NOT NULL,
@@ -51,10 +51,10 @@ CREATE TABLE Ranking (
     sala_id VARCHAR(7) NOT NULL
 );
 
-CREATE TABLE Emprestimo (
-    id UUID NOT NULL PRIMARY KEY,
-    jogador_origem_id UUID NOT NULL,
-    jogador_destino_id UUID NOT NULL,
+CREATE TABLE emprestimo (
+    id CHAR(36) NOT NULL PRIMARY KEY,
+    jogador_origem_id CHAR(36) NOT NULL,
+    jogador_destino_id CHAR(36) NOT NULL,
     valor_contratado DOUBLE NOT NULL,
     valor_devolucao DOUBLE NOT NULL,
     saldo_devedor DOUBLE NOT NULL,
@@ -62,53 +62,43 @@ CREATE TABLE Emprestimo (
     status ENUM('PENDENTE', 'ENCERRADO') NOT NULL DEFAULT 'PENDENTE'
 );
 
---CREATE TABLE ConfiguracaoSala (
- --   id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  --  sala_id VARCHAR(7) NOT NULL,
-   -- aluguel_multiplier DOUBLE DEFAULT 1.0,
-    --limite_emprestimo DOUBLE DEFAULT 100000,
-    --modo ENUM('TEMPO', 'RODADAS', 'NORMAL') NOT NULL DEFAULT 'NORMAL'
-    --CONSTRAINT fk_sala_configuracao FOREIGN KEY (sala_id) REFERENCES Sala(id)
---);
---
-
 
 -- Adição das constraints após a criação das tabelas
-ALTER TABLE Sala
-    ADD CONSTRAINT fk_administrador FOREIGN KEY (administrador_id) REFERENCES Jogador(id);
+ALTER TABLE sala
+    ADD CONSTRAINT fk_administrador FOREIGN KEY (administrador_id) REFERENCES jogador(id);
 
-ALTER TABLE Jogador
-    ADD CONSTRAINT fk_sala FOREIGN KEY (sala_id) REFERENCES Sala(id);
+ALTER TABLE jogador
+    ADD CONSTRAINT fk_sala FOREIGN KEY (sala_id) REFERENCES sala(id);
 
-ALTER TABLE Jogador
+ALTER TABLE jogador
     ADD CONSTRAINT uq_nome_sala UNIQUE (nome, sala_id);
 
-ALTER TABLE Propriedade
-    ADD CONSTRAINT fk_dono FOREIGN KEY (dono_id) REFERENCES Jogador(id);
+ALTER TABLE propriedade
+    ADD CONSTRAINT fk_dono FOREIGN KEY (dono_id) REFERENCES jogador(id);
 
-ALTER TABLE Propriedade
-    ADD CONSTRAINT fk_sala_propriedade FOREIGN KEY (sala_id) REFERENCES Sala(id);
+ALTER TABLE propriedade
+    ADD CONSTRAINT fk_sala_propriedade FOREIGN KEY (sala_id) REFERENCES sala(id);
 
-ALTER TABLE Transacao
-    ADD CONSTRAINT fk_sala_transacao FOREIGN KEY (sala_id) REFERENCES Sala(id);
+ALTER TABLE transacao
+    ADD CONSTRAINT fk_sala_transacao FOREIGN KEY (sala_id) REFERENCES sala(id);
 
-ALTER TABLE Transacao
-    ADD CONSTRAINT fk_origem FOREIGN KEY (origem_id) REFERENCES Jogador(id);
+ALTER TABLE transacao
+    ADD CONSTRAINT fk_origem FOREIGN KEY (origem_id) REFERENCES jogador(id);
 
-ALTER TABLE Transacao
-    ADD CONSTRAINT fk_destino FOREIGN KEY (destino_id) REFERENCES Jogador(id);
+ALTER TABLE transacao
+    ADD CONSTRAINT fk_destino FOREIGN KEY (destino_id) REFERENCES jogador(id);
 
-ALTER TABLE Transacao
-    ADD CONSTRAINT fk_propriedade FOREIGN KEY (propriedade_id) REFERENCES Propriedade(id);
+ALTER TABLE transacao
+    ADD CONSTRAINT fk_propriedade FOREIGN KEY (propriedade_id) REFERENCES propriedade(id);
 
-ALTER TABLE Ranking
-    ADD CONSTRAINT fk_ranking_jogador FOREIGN KEY (jogador_id) REFERENCES Jogador(id);
+ALTER TABLE ranking
+    ADD CONSTRAINT fk_ranking_jogador FOREIGN KEY (jogador_id) REFERENCES jogador(id);
 
-ALTER TABLE Ranking
-    ADD CONSTRAINT fk_ranking_sala FOREIGN KEY (sala_id) REFERENCES Sala(id);
+ALTER TABLE ranking
+    ADD CONSTRAINT fk_ranking_sala FOREIGN KEY (sala_id) REFERENCES sala(id);
 
-ALTER TABLE Emprestimo
-    ADD CONSTRAINT fk_jogador_origem FOREIGN KEY (jogador_origem_id) REFERENCES Jogador(id);
+ALTER TABLE emprestimo
+    ADD CONSTRAINT fk_jogador_origem FOREIGN KEY (jogador_origem_id) REFERENCES jogador(id);
 
-ALTER TABLE Emprestimo
-    ADD CONSTRAINT  fk_jogador_destino FOREIGN KEY (jogador_destino_id) REFERENCES Jogador(id)
+ALTER TABLE emprestimo
+    ADD CONSTRAINT  fk_jogador_destino FOREIGN KEY (jogador_destino_id) REFERENCES jogador(id)

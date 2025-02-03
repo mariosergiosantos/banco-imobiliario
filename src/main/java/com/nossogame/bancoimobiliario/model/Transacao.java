@@ -9,11 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class Transacao {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+public class Transacao extends AbstractModel {
 
     @ManyToOne
     @JoinColumn(name = "sala_id", nullable = false)
@@ -45,7 +41,8 @@ public class Transacao {
     @Column
     private String descricao;
 
-    public Transacao() {}
+    public Transacao() {
+    }
 
     public Transacao(Sala sala, Jogador comprador, Jogador vendedor, Propriedade propriedade, TipoTransacao tipo, double valor, String descricao) {
         this.sala = sala;
@@ -55,14 +52,6 @@ public class Transacao {
         this.tipo = tipo;
         this.valor = valor;
         this.descricao = descricao;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public Sala getSala() {

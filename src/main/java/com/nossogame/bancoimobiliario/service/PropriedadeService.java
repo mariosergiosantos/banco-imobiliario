@@ -1,15 +1,9 @@
 package com.nossogame.bancoimobiliario.service;
 
-import com.nossogame.bancoimobiliario.dto.ConstruirPropriedadeRequestDto;
-import com.nossogame.bancoimobiliario.dto.TransacaoDto;
-import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
 import com.nossogame.bancoimobiliario.exception.ResourceNotFoundException;
-import com.nossogame.bancoimobiliario.factory.TransacaoFactory;
-import com.nossogame.bancoimobiliario.mapper.TransacaoMapper;
 import com.nossogame.bancoimobiliario.model.*;
 import com.nossogame.bancoimobiliario.model.enuns.CorPropriedade;
 import com.nossogame.bancoimobiliario.repository.PropriedadeRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,9 +15,6 @@ public class PropriedadeService {
 
     @Autowired
     private PropriedadeRepository propriedadeRepository;
-
-    @Autowired
-    private JogadorService jogadorService;
 
     public Propriedade atualizarPropriedade(Propriedade propriedade) {
         return propriedadeRepository.save(propriedade);
@@ -90,74 +81,11 @@ public class PropriedadeService {
         propriedadeRepository.saveAll(propriedades);
     }
 
-    //TODO adicionar validação para que todas as casas tenham a mesma quantidade de propriedade
-    private boolean verificarPropriedadesDaMesmaCor(String salaId, CorPropriedade cor, Jogador jogador) {
-        List<Casa> propriedades = propriedadeRepository.findBySalaIdAndCor(salaId, cor);
-        return propriedades.stream()
-                .allMatch(propriedade ->
-                        propriedade.getDono() != null && jogador.getId().equals(propriedade.getDono().getId())
-                );
-    }
-
     public double calcularValorTotalPropriedades(Jogador jogador) {
         return propriedadeRepository.findByDono(jogador)
                 .stream()
                 .mapToDouble(Propriedade::getValorCompra)
                 .sum();
-    }
-
-    @Transactional
-    public TransacaoDto construirPropriedade(String salaId, String propriedadeId, ConstruirPropriedadeRequestDto requestDto)
-            throws ResourceNotFoundException, RegraNegocialException {
-
-        Propriedade propriedade = propriedadeRepository.findById(propriedadeId)
-                .orElseThrow(() -> new ResourceNotFoundException("Propriedade não encontrada."));
-
-        Jogador jogador = jogadorService.findById(requestDto.getJogadorId());
-
-        if (!(propriedade instanceof Casa)) {
-            throw new RegraNegocialException("Apenas propriedades do tipo Casa permitem construção.");
-        }
-
-        Casa casa = (Casa) propriedade;
-
-        double custoConstrucao = calcularCustoConstrucao(casa);
-        if (jogador.getSaldo() < custoConstrucao) {
-            throw new RegraNegocialException("Saldo insuficiente para construir.");
-        }
-
-        if (casa.isHipotecada()) {
-            throw new RegraNegocialException("Não é possível construir em propriedades hipotecadas.");
-        }
-
-        if (casa.isHotel()) {
-            throw new RegraNegocialException("A propriedade já atingiu o limite de construções.");
-        }
-
-        boolean todasPropriedadesPossuidas = verificarPropriedadesDaMesmaCor(salaId, casa.getCor(), jogador);
-        if (!todasPropriedadesPossuidas) {
-            throw new RegraNegocialException("Apenas propriedades do tipo Casa permitem construção.");
-        }
-
-        jogadorService.debitarSaldo(jogador, custoConstrucao);
-
-        casa.setNumeroCasas(casa.getNumeroCasas() + 1);
-
-        if (casa.getNumeroCasas() == 4) {
-            casa.setHotel(true);
-            casa.setNumeroCasas(0);
-        }
-
-        propriedadeRepository.save(casa);
-
-        Transacao transacao = TransacaoFactory.criarTransacaoContruirPropriedade(propriedade.getSala(), jogador, propriedade, custoConstrucao, "Construção de propriedade");
-
-        // TODO salvar transacao
-        return TransacaoMapper.INSTANCE.toDTO(transacao);
-    }
-
-    private double calcularCustoConstrucao(Casa casa) {
-        return casa.getValorCompra() * (casa.getNumeroCasas() + 1);
     }
 
     public List<Propriedade> buscarPropriedadesPorJogador(Jogador jogador) {

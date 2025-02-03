@@ -1,6 +1,8 @@
 FROM openjdk:21-jdk-slim
 
-RUN addgroup --system spring && adduser --system --ingroup spring spring
+RUN addgroup --system spring && adduser --system --ingroup spring spring \
+    && mkdir -p /home/spring \
+    && chown -R spring:spring /home/spring
 
 WORKDIR /home/spring
 
@@ -16,4 +18,4 @@ ENV AWS_ACCESS_KEY_ID=test \
     AWS_SECRET_ACCESS_KEY=test \
     AWS_REGION=us-east-1
 
-ENTRYPOINT ["java", "-jar", "/home/spring/app.jar"]
+CMD ["java", "-jar", "/home/spring/app.jar"]

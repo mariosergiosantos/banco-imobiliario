@@ -1,6 +1,5 @@
 package com.nossogame.bancoimobiliario.model;
 
-import com.nossogame.bancoimobiliario.model.enuns.StatusJogador;
 import jakarta.persistence.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -8,11 +7,7 @@ import java.util.List;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class Jogador {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+public class Jogador extends AbstractModel {
 
     @Column(nullable = false)
     private String nome;
@@ -36,14 +31,6 @@ public class Jogador {
 
     @Transient
     private double saldoPropriedades;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getNome() {
         return nome;

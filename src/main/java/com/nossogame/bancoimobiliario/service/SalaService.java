@@ -2,7 +2,6 @@ package com.nossogame.bancoimobiliario.service;
 
 import com.nossogame.bancoimobiliario.dto.SalaDto;
 import com.nossogame.bancoimobiliario.dto.request.SalaRequestDto;
-import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
 import com.nossogame.bancoimobiliario.exception.ResourceNotFoundException;
 import com.nossogame.bancoimobiliario.mapper.SalaMapper;
 import com.nossogame.bancoimobiliario.model.Jogador;
@@ -27,6 +26,7 @@ public class SalaService {
     public SalaDto criarSala(SalaRequestDto salaRequestDto) {
         Sala sala = new Sala();
         sala.setStatus(StatusSala.ABERTA);
+        sala.setId(CodigoAleatorio.gerarCodigo());
 
         Jogador jogador = new Jogador();
         jogador.setSala(sala);

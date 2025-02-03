@@ -31,9 +31,6 @@ public class TransacaoService {
     private TransactionValidation transactionValidation;
 
     @Autowired
-    private SalaService salaService;
-
-    @Autowired
     private PropriedadeService propriedadeService;
 
     @Autowired
@@ -47,10 +44,6 @@ public class TransacaoService {
         Sala sala = transactionValidation.validarSalaEmAndamento(salaId);
         Jogador jogador = jogadorService.buscarJodagor(transacaoRequest.getCompradorId(), salaId);
 
-        return processarTransacao(transacaoRequest, sala, jogador);
-    }
-
-    private TransacaoDto processarTransacao(TransacaoRequestDto transacaoRequest, Sala sala, Jogador jogador) throws ResourceNotFoundException, RegraNegocialException {
         TransacaoStrategy strategy = transacaoStrategies.get(transacaoRequest.getTipoTransacao().name());
         if (strategy == null) {
             throw new IllegalArgumentException("Tipo de transação inválido: " + transacaoRequest.getTipoTransacao().name());

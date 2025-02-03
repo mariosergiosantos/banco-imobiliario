@@ -76,12 +76,6 @@ public class JogadorService {
         return jogadores;
     }
 
-    @Deprecated
-    public Jogador atualizarSaldo(Jogador jogador, double novoSaldo) {
-        jogador.setSaldo(novoSaldo);
-        return jogadorRepository.save(jogador);
-    }
-
     public Jogador debitarSaldo(Jogador jogador, double saldo) {
         jogador.setSaldo(jogador.getSaldo() - saldo);
         return jogadorRepository.save(jogador);

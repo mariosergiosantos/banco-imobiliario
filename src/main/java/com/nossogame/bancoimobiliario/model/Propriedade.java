@@ -7,11 +7,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo_propriedade", discriminatorType = DiscriminatorType.STRING)
-public abstract class Propriedade {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    protected String id;
+public abstract class Propriedade extends AbstractModel {
 
     @Column(nullable = false)
     protected String nome;
@@ -26,6 +22,9 @@ public abstract class Propriedade {
     protected boolean hipotecada;
 
     @Column(nullable = false)
+    private boolean companhia;
+
+    @Column(nullable = false)
     protected double valorAluguelAtual;
 
     @ManyToOne
@@ -36,14 +35,7 @@ public abstract class Propriedade {
     @JoinColumn(name = "sala_id", nullable = false)
     protected Sala sala;
 
-    public Propriedade() {}
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public Propriedade() {
     }
 
     public String getNome() {
@@ -84,6 +76,14 @@ public abstract class Propriedade {
 
     public void setHipotecada(boolean hipotecada) {
         this.hipotecada = hipotecada;
+    }
+
+    public boolean isCompanhia() {
+        return companhia;
+    }
+
+    public void setCompanhia(boolean companhia) {
+        this.companhia = companhia;
     }
 
     public Jogador getDono() {

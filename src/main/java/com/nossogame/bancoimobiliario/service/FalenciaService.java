@@ -2,7 +2,6 @@ package com.nossogame.bancoimobiliario.service;
 
 import com.nossogame.bancoimobiliario.model.Jogador;
 import com.nossogame.bancoimobiliario.model.Propriedade;
-import com.nossogame.bancoimobiliario.model.enuns.StatusJogador;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

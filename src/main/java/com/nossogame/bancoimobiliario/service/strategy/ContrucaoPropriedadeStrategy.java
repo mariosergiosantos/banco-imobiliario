@@ -7,13 +7,15 @@ import com.nossogame.bancoimobiliario.repository.PropriedadeRepository;
 import com.nossogame.bancoimobiliario.repository.TransacaoRepository;
 import com.nossogame.bancoimobiliario.service.JogadorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component("CONSTRUIR_PROPRIEDADE")
 public class ContrucaoPropriedadeStrategy implements TransacaoStrategy {
 
     @Autowired
-    private PropriedadeRepository propriedadeRepository;
+    private PropriedadeRepository propriedadeRepository; //TODO ajustar para service
 
     @Autowired
     private JogadorService jogadorService;
@@ -44,14 +46,13 @@ public class ContrucaoPropriedadeStrategy implements TransacaoStrategy {
         }
 
         if (!verificarPropriedadesDaMesmaCor(casa, jogador)) {
-            throw new RegraNegocialException("Você não pode construir sem atingir o nível necessário em todas as propriedades da mesma cor.");
+            throw new RegraNegocialException("Para construir é necessário possuir todas as propriedades da mesma cor e com o mesmo número de casas.");
         }
 
         casa.setNumeroCasas(casa.getNumeroCasas() + 1);
 
         if (casa.getNumeroCasas() == 4) {
             casa.setHotel(true);
-            casa.setNumeroCasas(0);
         }
 
         jogadorService.debitarSaldo(jogador, custoConstrucao);
@@ -60,13 +61,13 @@ public class ContrucaoPropriedadeStrategy implements TransacaoStrategy {
 
         String descricao = String.format(
                 "Construção de %s na propriedade %s efetuada por %s com valor %.2f",
-                casa.getNumeroCasas() == 0 ? "casa" : "hotel",
+                casa.isHotel() ? "hotel" : "casa",
                 casa.getNome(),
                 jogador.getNome(),
                 custoConstrucao
         );
 
-        Transacao transacao = TransacaoFactory.criarTransacaoContruirPropriedade(propriedade.getSala(), jogador, propriedade, custoConstrucao, "Construção de propriedade");
+        Transacao transacao = TransacaoFactory.criarTransacaoContruirPropriedade(propriedade.getSala(), jogador, propriedade, custoConstrucao, descricao);
 
         return transacaoRepository.save(transacao);
     }
@@ -87,8 +88,7 @@ public class ContrucaoPropriedadeStrategy implements TransacaoStrategy {
                 .min()
                 .orElse(0);
 
-        return propriedades.stream()
-                .allMatch(propriedade -> propriedade.getNumeroCasas() == casasMinimas);
+        return casa.getNumeroCasas() == casasMinimas;
     }
 
     private double calcularCustoConstrucao(Casa casa) {

@@ -9,11 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class Emprestimo {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+public class Emprestimo extends AbstractModel {
 
     @ManyToOne
     @JoinColumn(name = "sala_id", nullable = false)
@@ -46,14 +42,6 @@ public class Emprestimo {
     @CreatedDate
     @Column(nullable = false)
     private LocalDateTime dataEmprestimo;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public Sala getSala() {
         return sala;
