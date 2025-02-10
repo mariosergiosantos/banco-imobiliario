@@ -1,4 +1,4 @@
-package com.nossogame.bancoimobiliario.dto;
+package com.nossogame.bancoimobiliario.dto.response;
 
 public class EmprestimoResponseDto {
 

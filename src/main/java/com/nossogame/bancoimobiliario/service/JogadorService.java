@@ -39,7 +39,7 @@ public class JogadorService {
         Jogador jogador = new Jogador();
         jogador.setSala(sala);
         jogador.setSaldo(SALDO_INICIAL_JOGADOR);
-        jogador.setNome(jogadorRequestDto.getNome());
+        jogador.setNome(jogadorRequestDto.nome());
         jogador.setAdmin(false);
 
         try {

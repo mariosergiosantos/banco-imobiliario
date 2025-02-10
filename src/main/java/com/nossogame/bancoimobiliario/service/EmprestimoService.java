@@ -37,44 +37,44 @@ public class EmprestimoService {
     @Transactional
     public EmprestimoDto solicitarEmprestimo(SolicitarEmprestimoDto solicitacaoEmprestimo) throws RegraNegocialException, ResourceNotFoundException {
 
-        Sala sala = salaService.buscarSalaPorId(solicitacaoEmprestimo.getSalaId());
+        Sala sala = salaService.buscarSalaPorId(solicitacaoEmprestimo.salaId());
         if (!sala.getStatus().equals(StatusSala.EM_ANDAMENTO)) {
             throw new RegraNegocialException("Sala não está disponível para realizar transações.");
         }
 
-        Jogador pagador = jogadorService.findById(solicitacaoEmprestimo.getPagadorId());
+        Jogador pagador = jogadorService.findById(solicitacaoEmprestimo.pagadorId());
 
-        if (pagador.getSaldo() < solicitacaoEmprestimo.getValorContratado()) {
+        if (pagador.getSaldo() < solicitacaoEmprestimo.valorContratado()) {
             throw new RegraNegocialException("O jogador não possui saldo suficiente para conceder o empréstimo.");
         }
 
-        Jogador recebedor = jogadorService.findById(solicitacaoEmprestimo.getRecebedorId());
+        Jogador recebedor = jogadorService.findById(solicitacaoEmprestimo.recebedorId());
 
-        if (solicitacaoEmprestimo.getValorAcordado() < solicitacaoEmprestimo.getValorContratado()) {
+        if (solicitacaoEmprestimo.valorAcordado() < solicitacaoEmprestimo.valorContratado()) {
             throw new RegraNegocialException("O valor acordado não pode ser menor que o valor contratado.");
         }
 
-        jogadorService.debitarSaldo(pagador, solicitacaoEmprestimo.getValorContratado());
-        jogadorService.creditarSaldo(recebedor, solicitacaoEmprestimo.getValorAcordado());
+        jogadorService.debitarSaldo(pagador, solicitacaoEmprestimo.valorContratado());
+        jogadorService.creditarSaldo(recebedor, solicitacaoEmprestimo.valorAcordado());
 
         Emprestimo emprestimo = new Emprestimo();
         emprestimo.setRecebedor(recebedor);
         emprestimo.setPagador(pagador);
         emprestimo.setSala(sala);
-        emprestimo.setValorContratado(solicitacaoEmprestimo.getValorContratado());
-        emprestimo.setValorDevolucao(solicitacaoEmprestimo.getValorAcordado());
-        emprestimo.setSaldoDevedor(solicitacaoEmprestimo.getValorAcordado());
+        emprestimo.setValorContratado(solicitacaoEmprestimo.valorContratado());
+        emprestimo.setValorDevolucao(solicitacaoEmprestimo.valorAcordado());
+        emprestimo.setSaldoDevedor(solicitacaoEmprestimo.valorAcordado());
         emprestimo.setStatus(StatusEmprestimo.PENDENTE);
         emprestimo.setDataEmprestimo(LocalDateTime.now());
 
         String descricao = String.format(
                 "Empréstimo de %.2f solicitado por %s para %s",
-                solicitacaoEmprestimo.getValorContratado(),
+                solicitacaoEmprestimo.valorContratado(),
                 pagador.getNome(),
                 recebedor.getNome()
         );
 
-        Transacao transacao = TransacaoFactory.criarTransacaoEmprestimo(sala, pagador, recebedor, solicitacaoEmprestimo.getValorAcordado(), descricao);
+        Transacao transacao = TransacaoFactory.criarTransacaoEmprestimo(sala, pagador, recebedor, solicitacaoEmprestimo.valorAcordado(), descricao);
 
         transacaoService.save(transacao);
 
@@ -83,7 +83,7 @@ public class EmprestimoService {
 
 
     @Transactional
-    public EmprestimoDto pagarEmprestimo(String emprestimoId, String pagadorId, double valor) throws ResourceNotFoundException, RegraNegocialException {
+    public EmprestimoDto pagarEmprestimo(String emprestimoId, double valor) throws ResourceNotFoundException, RegraNegocialException {
         Emprestimo emprestimo = emprestimoRepository.findById(emprestimoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Empréstimo não encontrado."));
 
@@ -91,11 +91,7 @@ public class EmprestimoService {
             throw new RegraNegocialException("O empréstimo já foi encerrado.");
         }
 
-        if (!emprestimo.getPagador().getId().equals(pagadorId)) {
-            throw new RegraNegocialException("O jogador informado não é o devedor deste empréstimo.");
-        }
-
-        Jogador pagador = jogadorService.findById(pagadorId);
+        Jogador pagador = emprestimo.getPagador();
         Jogador recebedor = emprestimo.getRecebedor();
 
         if (pagador.getSaldo() < valor) {

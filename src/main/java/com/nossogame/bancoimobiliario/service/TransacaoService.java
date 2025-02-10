@@ -42,19 +42,19 @@ public class TransacaoService {
     @Transactional
     public TransacaoDto registrarTransacao(String salaId, TransacaoRequestDto transacaoRequest) throws ResourceNotFoundException, RegraNegocialException {
         Sala sala = transactionValidation.validarSalaEmAndamento(salaId);
-        Jogador jogador = jogadorService.buscarJodagor(transacaoRequest.getCompradorId(), salaId);
+        Jogador jogador = jogadorService.buscarJodagor(transacaoRequest.compradorId(), salaId);
 
-        TransacaoStrategy strategy = transacaoStrategies.get(transacaoRequest.getTipoTransacao().name());
+        TransacaoStrategy strategy = transacaoStrategies.get(transacaoRequest.tipoTransacao().name());
         if (strategy == null) {
-            throw new IllegalArgumentException("Tipo de transação inválido: " + transacaoRequest.getTipoTransacao().name());
+            throw new IllegalArgumentException("Tipo de transação inválido: " + transacaoRequest.tipoTransacao().name());
         }
 
         Transacao transacao;
         if (strategy instanceof PagamentoSalarioStrategy) {
             transacao = strategy.executar(sala, jogador, null, 0d);
         } else {
-            Propriedade propriedade = propriedadeService.buscarPropriedade(transacaoRequest.getPropriedadeId(), sala.getId());
-            transacao = strategy.executar(sala, jogador, propriedade, transacaoRequest.getValor());
+            Propriedade propriedade = propriedadeService.buscarPropriedade(transacaoRequest.propriedadeId(), sala.getId());
+            transacao = strategy.executar(sala, jogador, propriedade, transacaoRequest.valor());
         }
 
         return TransacaoMapper.INSTANCE.toDTO(transacao);

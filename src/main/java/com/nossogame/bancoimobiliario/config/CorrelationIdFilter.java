@@ -11,10 +11,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.UUID;
 
+import static com.nossogame.bancoimobiliario.config.AppConstantes.CORRELATION_ID_HEADER;
+
 @Component
 public class CorrelationIdFilter extends OncePerRequestFilter {
 
-    private static final String CORRELATION_ID_HEADER = "X-Correlation-Id";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

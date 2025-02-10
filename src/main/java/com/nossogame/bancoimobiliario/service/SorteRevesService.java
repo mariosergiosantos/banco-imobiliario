@@ -1,6 +1,6 @@
 package com.nossogame.bancoimobiliario.service;
 
-import com.nossogame.bancoimobiliario.dto.CartaImpactoRequestDto;
+import com.nossogame.bancoimobiliario.dto.request.CartaImpactoRequestDto;
 import com.nossogame.bancoimobiliario.exception.ResourceNotFoundException;
 import com.nossogame.bancoimobiliario.model.Jogador;
 import com.nossogame.bancoimobiliario.model.enuns.SorteReves;
@@ -16,12 +16,13 @@ public class SorteRevesService {
 
     @Transactional
     public void aplicarImpacto(String jogadorId, CartaImpactoRequestDto impacto) throws ResourceNotFoundException {
-        Jogador jogador = jogadorService.buscarJodagor(impacto.getSalaId(), jogadorId);
+        Jogador jogador = jogadorService.buscarJodagor(impacto.salaId(), jogadorId);
 
-        if (impacto.getTipo().equals(SorteReves.SORTE)) {
-            jogadorService.creditarSaldo(jogador, impacto.getValor());
-        } else {
-            jogadorService.creditarSaldo(jogador, impacto.getValor());
+        //TODO registrar transação
+        switch (impacto.tipo()) {
+            case SorteReves.SORTE -> jogadorService.creditarSaldo(jogador, impacto.valor());
+            case SorteReves.REVES -> jogadorService.debitarSaldo(jogador, impacto.valor());
+            default -> throw new IllegalArgumentException("Tipo inválido");
         }
     }
 }

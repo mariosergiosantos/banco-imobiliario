@@ -1,6 +1,6 @@
 package com.nossogame.bancoimobiliario.controller;
 
-import com.nossogame.bancoimobiliario.dto.CartaImpactoRequestDto;
+import com.nossogame.bancoimobiliario.dto.request.CartaImpactoRequestDto;
 import com.nossogame.bancoimobiliario.dto.JogadorDto;
 import com.nossogame.bancoimobiliario.dto.request.JogadorRequestDto;
 import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
@@ -28,7 +28,7 @@ public class JogadorController {
     @PostMapping
     public ResponseEntity<JogadorDto> adicionarJogador(@Valid @RequestBody JogadorRequestDto jogador)
             throws ResourceNotFoundException, RegraNegocialException {
-        JogadorDto jogadorDto = jogadorService.adicionarJogador(jogador.getSalaId(), jogador);
+        JogadorDto jogadorDto = jogadorService.adicionarJogador(jogador.salaId(), jogador);
         return new ResponseEntity<>(jogadorDto, HttpStatus.CREATED);
     }
 

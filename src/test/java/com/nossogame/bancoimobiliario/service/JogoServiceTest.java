@@ -132,10 +132,10 @@ class JogoServiceTest extends AbstractTest {
 
         VencedorJogoDto resultado = jogoService.finalizar(codigoSala);
 
-        assertEquals(codigoSala, resultado.getSalaId());
-        assertEquals(jogador.getNome(), resultado.getNome());
-        assertEquals(2158000, resultado.getSaldo());
-        assertEquals(1000, resultado.getSaldoPropriedades());
+        assertEquals(codigoSala, resultado.salaId());
+        assertEquals(jogador.getNome(), resultado.nome());
+        assertEquals(2158000, resultado.saldo());
+        assertEquals(1000, resultado.saldoPropriedades());
 
         verify(salaService).buscarSalaPorId(codigoSala);
         verify(gameValidation).endGameValidation(sala);

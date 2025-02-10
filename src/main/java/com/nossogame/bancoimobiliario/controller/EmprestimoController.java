@@ -43,8 +43,7 @@ public class EmprestimoController {
             throws RegraNegocialException, ResourceNotFoundException {
         emprestimoService.pagarEmprestimo(
                 id,
-                dto.getPagadorId(),
-                dto.getValor()
+                dto.valor()
         );
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

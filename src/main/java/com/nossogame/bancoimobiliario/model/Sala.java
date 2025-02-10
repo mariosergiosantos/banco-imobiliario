@@ -1,7 +1,6 @@
 package com.nossogame.bancoimobiliario.model;
 
 import com.nossogame.bancoimobiliario.model.enuns.StatusSala;
-import com.nossogame.bancoimobiliario.service.CodigoAleatorio;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -37,13 +36,6 @@ public class Sala {
 
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Transacao> transacoes;
-
-    @PrePersist
-    public void prePersist() {
-        if (this.id == null) {
-            this.id = new CodigoAleatorio().gerarCodigo();
-        }
-    }
 
     public String getId() {
         return id;

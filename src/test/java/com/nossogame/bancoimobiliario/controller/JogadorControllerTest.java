@@ -35,10 +35,7 @@ class JogadorControllerTest extends AbstractTest {
 
     @Test
     void deveAdicionarJogadorComSucesso() throws Exception {
-        JogadorDto jogadorDto = new JogadorDto();
-        jogadorDto.setId("123");
-        jogadorDto.setNome("Jogador A");
-        jogadorDto.setSaldo(1500);
+        JogadorDto jogadorDto = new JogadorDto("123", "Jogador A", 1500, "ABCDE1", false);
 
         when(jogadorService.adicionarJogador(eq("ABCDE1"), any(JogadorRequestDto.class))).thenReturn(jogadorDto);
 
@@ -67,13 +64,9 @@ class JogadorControllerTest extends AbstractTest {
 
     @Test
     void deveListarJogadoresDeUmaSala() throws Exception {
-        JogadorDto jogadorA = new JogadorDto();
-        jogadorA.setId("123");
-        jogadorA.setNome("Jogador A");
+        JogadorDto jogadorA = new JogadorDto("123", "Jogador A", 1500, "ABCDE1", false);
 
-        JogadorDto jogadorB = new JogadorDto();
-        jogadorB.setId("124");
-        jogadorB.setNome("Jogador B");
+        JogadorDto jogadorB = new JogadorDto("124", "Jogador B", 1500, "ABCDE1", false);
 
 
         List<JogadorDto> jogadores = List.of(

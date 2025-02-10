@@ -41,8 +41,8 @@ class RankingServiceTest extends AbstractTest {
         RankingDto resultado = rankingService.registrarVitoria(jogador, sala);
 
         assertNotNull(resultado);
-        assertEquals(ranking.getJogador().getNome(), resultado.getNomeJogador());
-        assertEquals(ranking.getSaldoFinal(), resultado.getSaldoFinal());
+        assertEquals(ranking.getJogador().getNome(), resultado.nomeJogador());
+        assertEquals(ranking.getSaldoFinal(), resultado.saldoFinal());
 
         verify(rankingRepository).save(any());
     }

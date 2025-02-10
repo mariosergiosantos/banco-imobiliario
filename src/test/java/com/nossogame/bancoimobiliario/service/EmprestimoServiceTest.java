@@ -9,7 +9,9 @@ import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
 import com.nossogame.bancoimobiliario.exception.ResourceNotFoundException;
 import com.nossogame.bancoimobiliario.model.Emprestimo;
 import com.nossogame.bancoimobiliario.model.Jogador;
+import com.nossogame.bancoimobiliario.model.Transacao;
 import com.nossogame.bancoimobiliario.model.enuns.StatusEmprestimo;
+import com.nossogame.bancoimobiliario.model.enuns.StatusSala;
 import com.nossogame.bancoimobiliario.repository.EmprestimoRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,6 +41,12 @@ class EmprestimoServiceTest extends AbstractTest {
     @Mock
     private JogadorService jogadorService;
 
+    @Mock
+    private TransacaoService transacaoService;
+
+    @Mock
+    private SalaService salaService;
+
     @Test
     void deveCriarEmprestimoComSucesso() throws ResourceNotFoundException, RegraNegocialException {
         Jogador recebedor = Fixture.from(Jogador.class).gimme("valido", new Rule() {{
@@ -56,18 +64,14 @@ class EmprestimoServiceTest extends AbstractTest {
             add("pagador", pagador);
         }});
 
+        when(salaService.buscarSalaPorId(sala.getId())).thenReturn(sala);
         when(jogadorService.findById(pagador.getId())).thenReturn(pagador);
         when(jogadorService.findById(recebedor.getId())).thenReturn(recebedor);
         when(jogadorService.debitarSaldo(pagador, 500)).thenReturn(pagador);
         when(jogadorService.creditarSaldo(recebedor, 600)).thenReturn(recebedor);
         when(emprestimoRepository.save(any(Emprestimo.class))).thenReturn(novoEmprestimo);
 
-        SolicitarEmprestimoDto solicitarEmprestimoDto = new SolicitarEmprestimoDto();
-        solicitarEmprestimoDto.setRecebedorId(recebedor.getId());
-        solicitarEmprestimoDto.setPagadorId(pagador.getId());
-        solicitarEmprestimoDto.setValorContratado(500);
-        solicitarEmprestimoDto.setValorAcordado(600);
-
+        SolicitarEmprestimoDto solicitarEmprestimoDto = new SolicitarEmprestimoDto(sala.getId(), recebedor.getId(), pagador.getId(), 500, 600);
 
         EmprestimoDto resultado = emprestimoService.solicitarEmprestimo(solicitarEmprestimoDto);
 
@@ -87,7 +91,7 @@ class EmprestimoServiceTest extends AbstractTest {
     }
 
     @Test
-    void deveLancarExcecaoQuandoSaldoInsuficienteParaEmprestimo() throws ResourceNotFoundException, RegraNegocialException {
+    void deveLancarExcecaoQuandoSaldoInsuficienteParaEmprestimo() throws ResourceNotFoundException {
         Jogador origem = Fixture.from(Jogador.class).gimme("valido", new Rule() {{
             add("sala", sala);
             add("saldo", 400d);
@@ -97,13 +101,12 @@ class EmprestimoServiceTest extends AbstractTest {
             add("sala", sala);
         }});
 
-        when(jogadorService.findById(origem.getId())).thenReturn(origem);
+        sala.setStatus(StatusSala.EM_ANDAMENTO);
 
-        SolicitarEmprestimoDto solicitarEmprestimoDto = new SolicitarEmprestimoDto();
-        solicitarEmprestimoDto.setRecebedorId(origem.getId());
-        solicitarEmprestimoDto.setPagadorId(destino.getId());
-        solicitarEmprestimoDto.setValorContratado(500);
-        solicitarEmprestimoDto.setValorAcordado(600);
+        when(jogadorService.findById(origem.getId())).thenReturn(origem);
+        when(salaService.buscarSalaPorId(sala.getId())).thenReturn(sala);
+
+        SolicitarEmprestimoDto solicitarEmprestimoDto = new SolicitarEmprestimoDto(sala.getId(), origem.getId(), destino.getId(), 500, 600);
 
         RegraNegocialException exception = assertThrows(RegraNegocialException.class, () -> emprestimoService.solicitarEmprestimo(solicitarEmprestimoDto));
 
@@ -134,8 +137,10 @@ class EmprestimoServiceTest extends AbstractTest {
         when(jogadorService.debitarSaldo(pagador, 600)).thenReturn(pagador);
         when(jogadorService.creditarSaldo(recebedor, 600)).thenReturn(recebedor);
         when(emprestimoRepository.save(any(Emprestimo.class))).thenReturn(emprestimo);
+        when(transacaoService.save(any())).thenReturn(new Transacao());
 
-        EmprestimoDto result = emprestimoService.pagarEmprestimo(emprestimo.getId(), pagador.getId(), 600);
+        EmprestimoDto result = emprestimoService.
+                pagarEmprestimo(emprestimo.getId(), 600);
 
         assertEquals(StatusEmprestimo.ENCERRADO, result.getStatus());
         assertEquals(0, result.getSaldoDevedor());
@@ -144,6 +149,7 @@ class EmprestimoServiceTest extends AbstractTest {
         verify(jogadorService).debitarSaldo(pagador, 600);
         verify(jogadorService).creditarSaldo(recebedor, 600);
         verify(emprestimoRepository).save(any(Emprestimo.class));
+        verify(transacaoService).save(any(Transacao.class));
     }
 
     @Test
@@ -166,7 +172,7 @@ class EmprestimoServiceTest extends AbstractTest {
         when(jogadorService.creditarSaldo(recebedor, 200)).thenReturn(recebedor);
         when(emprestimoRepository.save(any(Emprestimo.class))).thenReturn(emprestimo);
 
-        EmprestimoDto result = emprestimoService.pagarEmprestimo(emprestimo.getId(), recebedor.getId(), 200);
+        EmprestimoDto result = emprestimoService.pagarEmprestimo(emprestimo.getId(), 200);
 
         assertEquals(StatusEmprestimo.PENDENTE, result.getStatus());
         assertEquals(400, result.getSaldoDevedor());

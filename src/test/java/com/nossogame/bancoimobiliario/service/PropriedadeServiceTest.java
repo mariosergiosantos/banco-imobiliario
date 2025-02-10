@@ -1,30 +1,15 @@
 package com.nossogame.bancoimobiliario.service;
 
-import br.com.six2six.fixturefactory.Fixture;
-import br.com.six2six.fixturefactory.Rule;
 import com.nossogame.bancoimobiliario.AbstractTest;
-import com.nossogame.bancoimobiliario.dto.ConstruirPropriedadeRequestDto;
-import com.nossogame.bancoimobiliario.dto.TransacaoDto;
-import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
-import com.nossogame.bancoimobiliario.exception.ResourceNotFoundException;
-import com.nossogame.bancoimobiliario.model.Casa;
-import com.nossogame.bancoimobiliario.model.Companhia;
-import com.nossogame.bancoimobiliario.model.Jogador;
-import com.nossogame.bancoimobiliario.model.enuns.CorPropriedade;
 import com.nossogame.bancoimobiliario.repository.PropriedadeRepository;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Optional;
-import java.util.UUID;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PropriedadeServiceTest extends AbstractTest {

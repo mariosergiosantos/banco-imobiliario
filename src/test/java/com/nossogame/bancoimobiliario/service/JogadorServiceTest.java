@@ -53,13 +53,13 @@ class JogadorServiceTest extends AbstractTest {
         doCallRealMethod().when(playerValidation).validateCreatePlayer(sala);
         when(jogadorRepository.save(any(Jogador.class))).thenReturn(novoJogador);
 
-        JogadorDto resultado = jogadorService.adicionarJogador(codigoSala, new JogadorRequestDto("Mário"));
+        JogadorDto resultado = jogadorService.adicionarJogador(codigoSala, new JogadorRequestDto(sala.getId(), "Mário"));
 
         assertNotNull(resultado);
         // TODO Rever assertEquals(novoJogador.getId(), resultado.getId());
-        assertEquals(novoJogador.getNome(), resultado.getNome());
-        assertEquals(novoJogador.getSaldo(), resultado.getSaldo());
-        assertEquals(SALDO_INICIAL_JOGADOR, resultado.getSaldo());
+        assertEquals(novoJogador.getNome(), resultado.nome());
+        assertEquals(novoJogador.getSaldo(), resultado.saldo());
+        assertEquals(SALDO_INICIAL_JOGADOR, resultado.saldo());
 
         verify(salaService).buscarSalaPorId(codigoSala);
         verify(playerValidation).validateCreatePlayer(sala);
@@ -81,7 +81,7 @@ class JogadorServiceTest extends AbstractTest {
         when(jogadorRepository.save(any(Jogador.class))).thenThrow(new DataIntegrityViolationException(""));
 
         Exception exception = assertThrows(RegraNegocialException.class,
-                () -> jogadorService.adicionarJogador(codigoSala, new JogadorRequestDto("Mário")));
+                () -> jogadorService.adicionarJogador(codigoSala, new JogadorRequestDto(sala.getId(), "Mário")));
 
         assertNotNull(exception);
         assertEquals("Nome já cadastrado para outro jogador", exception.getMessage());

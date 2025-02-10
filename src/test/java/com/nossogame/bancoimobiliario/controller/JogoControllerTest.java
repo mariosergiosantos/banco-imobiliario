@@ -55,7 +55,7 @@ class JogoControllerTest extends AbstractTest {
 
     @Test
     void deveEncerrarJogoComSucesso() throws Exception {
-        when(jogoService.finalizar(codigoSala)).thenReturn(new VencedorJogoDto());
+        when(jogoService.finalizar(codigoSala)).thenReturn(new VencedorJogoDto(sala.getId(), "Jogador 1", 1000, 1));
 
         mockMvc.perform(post("/api/v1/salas/" + codigoSala + "/finalizar"))
                 .andExpect(status().isOk())

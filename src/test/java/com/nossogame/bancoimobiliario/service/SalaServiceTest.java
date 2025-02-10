@@ -41,11 +41,11 @@ class SalaServiceTest extends AbstractTest {
         SalaDto result = salaService.criarSala(salaRequestDto);
 
         assertNotNull(result);
-        assertEquals(codigoSala, result.getId());
-        assertEquals(StatusSala.ABERTA, result.getStatus());
-        assertNotNull(result.getJogadores());
-        assertEquals(1, result.getJogadores().size());
-        assertNull(result.getPropriedades());
+        assertEquals(codigoSala, result.id());
+        assertEquals(StatusSala.ABERTA, result.status());
+        assertNotNull(result.jogadores());
+        assertEquals(1, result.jogadores().size());
+        assertNull(result.propriedades());
 
         verify(salaRepository, times(1)).save(any(Sala.class));
     }
