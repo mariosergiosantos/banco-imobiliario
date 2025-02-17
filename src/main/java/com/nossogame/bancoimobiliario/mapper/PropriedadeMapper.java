@@ -9,13 +9,12 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(uses = {JogadorMapper.class})
 public interface PropriedadeMapper {
 
     PropriedadeMapper INSTANCE = Mappers.getMapper(PropriedadeMapper.class);
 
     @Mapping(source = "sala.id", target = "salaId")
-    @Mapping(source = "dono.id", target = "donoId")
     PropriedadeDto toDTO(Propriedade propriedade);
 
     @AfterMapping
@@ -24,7 +23,6 @@ public interface PropriedadeMapper {
         if (source instanceof Casa) {
             Casa casa = (Casa) source;
 
-            target.setNumeroCasas(casa.getNumeroCasas());
             target.setHotel(casa.isHotel());
             target.setCor(casa.getCor().name());
         }

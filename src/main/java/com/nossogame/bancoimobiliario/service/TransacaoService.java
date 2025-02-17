@@ -1,5 +1,6 @@
 package com.nossogame.bancoimobiliario.service;
 
+import com.nossogame.bancoimobiliario.config.Metric;
 import com.nossogame.bancoimobiliario.dto.TransacaoDto;
 import com.nossogame.bancoimobiliario.dto.request.TransacaoRequestDto;
 import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
@@ -64,6 +65,7 @@ public class TransacaoService {
         return transacaoRepository.save(transacao);
     }
 
+    @Metric(name = "listarTransacoesDaSala")
     public List<TransacaoDto> listarTransacoesDaSala(String salaId) {
         return TransacaoMapper.INSTANCE.toDTO(transacaoRepository.findBySalaId(salaId)
                 .orElse(new ArrayList<>()));

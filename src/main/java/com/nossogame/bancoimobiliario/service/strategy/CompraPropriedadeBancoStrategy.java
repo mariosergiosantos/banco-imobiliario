@@ -1,7 +1,6 @@
 package com.nossogame.bancoimobiliario.service.strategy;
 
 import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
-import com.nossogame.bancoimobiliario.exception.ResourceNotFoundException;
 import com.nossogame.bancoimobiliario.factory.TransacaoFactory;
 import com.nossogame.bancoimobiliario.model.Jogador;
 import com.nossogame.bancoimobiliario.model.Propriedade;

@@ -1,5 +1,6 @@
 package com.nossogame.bancoimobiliario.controller;
 
+import com.nossogame.bancoimobiliario.config.Metric;
 import com.nossogame.bancoimobiliario.dto.TransacaoDto;
 import com.nossogame.bancoimobiliario.dto.request.TransacaoRequestDto;
 import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
@@ -28,6 +29,7 @@ public class TransacaoController {
     }
 
     @GetMapping("/salas/{id}")
+    @Metric(name = "transacoes_sala_controller")
     public ResponseEntity<List<TransacaoDto>> listarTransacoesDaSala(@PathVariable String id) {
         return ResponseEntity.ok(transacaoService.listarTransacoesDaSala(id));
     }

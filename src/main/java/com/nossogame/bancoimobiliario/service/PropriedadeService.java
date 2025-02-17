@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.nossogame.bancoimobiliario.model.enuns.TipoAluguel.*;
+
 @Service
 public class PropriedadeService {
 
@@ -29,52 +31,204 @@ public class PropriedadeService {
 
         List<Propriedade> propriedades = Arrays.asList(
                 // Roxo
-                new Casa("Leblon", CorPropriedade.ROXO, 100, 6, sala),
-                new Casa("Avenida Presidente Vargas", CorPropriedade.ROXO, 120, 8, sala),
+                new Casa("Avenida São João", CorPropriedade.ROXO, 50000, sala, Arrays.asList(
+                        new AluguelPropriedade(BASE, 8000),
+                        new AluguelPropriedade(CASA_1, 40000),
+                        new AluguelPropriedade(CASA_2, 100000),
+                        new AluguelPropriedade(CASA_3, 300000),
+                        new AluguelPropriedade(CASA_4, 450000),
+                        new AluguelPropriedade(HOTEL, 600000)
+                )),
+                new Casa("Avenida Ipiranga", CorPropriedade.ROXO, 50000, sala, Arrays.asList(
+                        new AluguelPropriedade(BASE, 6000),
+                        new AluguelPropriedade(CASA_1, 30000),
+                        new AluguelPropriedade(CASA_2, 90000),
+                        new AluguelPropriedade(CASA_3, 270000),
+                        new AluguelPropriedade(CASA_4, 400000),
+                        new AluguelPropriedade(HOTEL, 500000)
+                )),
 
                 // Ciano
-                new Casa("Avenida Nossa Senhora de Copacabana", CorPropriedade.CIANO, 140, 10, sala),
-                new Casa("Avenida Brigadeiro Faria Lima", CorPropriedade.CIANO, 160, 12, sala),
-                new Casa("Avenida Rebouças", CorPropriedade.CIANO, 180, 14, sala),
+                new Casa("Rua da Consolação", CorPropriedade.CIANO, 100000, sala, Arrays.asList(
+                        new AluguelPropriedade(BASE, 14000),
+                        new AluguelPropriedade(CASA_1, 70000),
+                        new AluguelPropriedade(CASA_2, 200000),
+                        new AluguelPropriedade(CASA_3, 550000),
+                        new AluguelPropriedade(CASA_4, 750000),
+                        new AluguelPropriedade(HOTEL, 950000)
+                )),
+                new Casa("Viaduto do Chá", CorPropriedade.CIANO, 100000, sala, Arrays.asList(
+                        new AluguelPropriedade(BASE, 16000),
+                        new AluguelPropriedade(CASA_1, 80000),
+                        new AluguelPropriedade(CASA_2, 220000),
+                        new AluguelPropriedade(CASA_3, 600000),
+                        new AluguelPropriedade(CASA_4, 800000),
+                        new AluguelPropriedade(HOTEL, 1000000)
+                )),
+                new Casa("Praça da Sé", CorPropriedade.CIANO, 100000, sala, Arrays.asList(
+                        new AluguelPropriedade(BASE, 14000),
+                        new AluguelPropriedade(CASA_1, 70000),
+                        new AluguelPropriedade(CASA_2, 200000),
+                        new AluguelPropriedade(CASA_3, 550000),
+                        new AluguelPropriedade(CASA_4, 750000),
+                        new AluguelPropriedade(HOTEL, 950000)
+                )),
 
                 // Rosa
-                new Casa("Avenida 9 de Julho", CorPropriedade.ROSA, 200, 16, sala),
-                new Casa("Avenida Europa", CorPropriedade.ROSA, 220, 18, sala),
-                new Casa("Rua Augusta", CorPropriedade.ROSA, 240, 20, sala),
+                new Casa("Higienópolis", CorPropriedade.ROSA, 200000, sala, Arrays.asList(
+                        new AluguelPropriedade(BASE, 50000),
+                        new AluguelPropriedade(CASA_1, 200000),
+                        new AluguelPropriedade(CASA_2, 600000),
+                        new AluguelPropriedade(CASA_3, 1400000),
+                        new AluguelPropriedade(CASA_4, 1700000),
+                        new AluguelPropriedade(HOTEL, 2000000)
+                )),
+                new Casa("Jardins", CorPropriedade.ROSA, 200000, sala, Arrays.asList(
+                        new AluguelPropriedade(BASE, 35000),
+                        new AluguelPropriedade(CASA_1, 175000),
+                        new AluguelPropriedade(CASA_2, 500000),
+                        new AluguelPropriedade(CASA_3, 1100000),
+                        new AluguelPropriedade(CASA_4, 1300000),
+                        new AluguelPropriedade(HOTEL, 1500000)
+                )),
 
                 // Laranja
-                new Casa("Avenida Interlagos", CorPropriedade.LARANJA, 260, 22, sala),
-                new Casa("Morumbi", CorPropriedade.LARANJA, 280, 24, sala),
-                new Casa("Vila Mariana", CorPropriedade.LARANJA, 300, 26, sala),
+                new Casa("Av. do Contorno", CorPropriedade.LARANJA, 200000, sala, Arrays.asList(
+                        new AluguelPropriedade(BASE, 26000),
+                        new AluguelPropriedade(CASA_1, 130000),
+                        new AluguelPropriedade(CASA_2, 390000),
+                        new AluguelPropriedade(CASA_3, 900000),
+                        new AluguelPropriedade(CASA_4, 1100000),
+                        new AluguelPropriedade(HOTEL, 1275000)
+                )),
+                new Casa("Praça dos Três Poderes", CorPropriedade.LARANJA, 200000, sala, Arrays.asList(
+                        new AluguelPropriedade(BASE, 28000),
+                        new AluguelPropriedade(CASA_1, 150000),
+                        new AluguelPropriedade(CASA_2, 450000),
+                        new AluguelPropriedade(CASA_3, 1000000),
+                        new AluguelPropriedade(CASA_4, 1200000),
+                        new AluguelPropriedade(HOTEL, 1400000)
+                )),
+                new Casa("Praça Castro Alves", CorPropriedade.LARANJA, 200000, sala, Arrays.asList(
+                        new AluguelPropriedade(BASE, 26000),
+                        new AluguelPropriedade(CASA_1, 130000),
+                        new AluguelPropriedade(CASA_2, 390000),
+                        new AluguelPropriedade(CASA_3, 900000),
+                        new AluguelPropriedade(CASA_4, 1100000),
+                        new AluguelPropriedade(HOTEL, 1275000)
+                )),
 
                 // Vermelho
-                new Casa("Avenida Paulista", CorPropriedade.VERMELHO, 320, 28, sala),
-                new Casa("Avenida Brigadeiro Luís Antônio", CorPropriedade.VERMELHO, 340, 30, sala),
-                new Casa("Jardins", CorPropriedade.VERMELHO, 360, 32, sala),
+                new Casa("Avenida Ibirapuera", CorPropriedade.VERMELHO, 150000, sala, Arrays.asList(
+                        new AluguelPropriedade(BASE, 18000),
+                        new AluguelPropriedade(CASA_1, 90000),
+                        new AluguelPropriedade(CASA_2, 250000),
+                        new AluguelPropriedade(CASA_3, 700000),
+                        new AluguelPropriedade(CASA_4, 875000),
+                        new AluguelPropriedade(HOTEL, 1050000)
+                )),
+                new Casa("Avenida Juscelino Kubitschek", CorPropriedade.VERMELHO, 150000, sala, Arrays.asList(
+                        new AluguelPropriedade(BASE, 18000),
+                        new AluguelPropriedade(CASA_1, 90000),
+                        new AluguelPropriedade(CASA_2, 250000),
+                        new AluguelPropriedade(CASA_3, 700000),
+                        new AluguelPropriedade(CASA_4, 875000),
+                        new AluguelPropriedade(HOTEL, 1050000)
+                )),
+                new Casa("Rua Oscar Freire", CorPropriedade.VERMELHO, 150000, sala, Arrays.asList(
+                        new AluguelPropriedade(BASE, 20000),
+                        new AluguelPropriedade(CASA_1, 100000),
+                        new AluguelPropriedade(CASA_2, 300000),
+                        new AluguelPropriedade(CASA_3, 750000),
+                        new AluguelPropriedade(CASA_4, 925000),
+                        new AluguelPropriedade(HOTEL, 1100000)
+                )),
 
                 // Amarelo
-                new Casa("Copacabana", CorPropriedade.AMARELO, 380, 34, sala),
-                new Casa("Ipanema", CorPropriedade.AMARELO, 400, 36, sala),
-                new Casa("Barra da Tijuca", CorPropriedade.AMARELO, 420, 38, sala),
+                new Casa("Ponte Rio-Niterói", CorPropriedade.AMARELO, 150000, sala, Arrays.asList(
+                        new AluguelPropriedade(BASE, 8000),
+                        new AluguelPropriedade(CASA_1, 40000),
+                        new AluguelPropriedade(CASA_2, 100000),
+                        new AluguelPropriedade(CASA_3, 300000),
+                        new AluguelPropriedade(CASA_4, 450000),
+                        new AluguelPropriedade(HOTEL, 600000)
+                )),
+                new Casa("Marina Glória", CorPropriedade.AMARELO, 15000, sala, Arrays.asList(
+                        new AluguelPropriedade(BASE, 8000),
+                        new AluguelPropriedade(CASA_1, 40000),
+                        new AluguelPropriedade(CASA_2, 100000),
+                        new AluguelPropriedade(CASA_3, 300000),
+                        new AluguelPropriedade(CASA_4, 450000),
+                        new AluguelPropriedade(HOTEL, 600000)
+                )),
+                new Casa("Barra do Tijuca", CorPropriedade.AMARELO, 150000, sala, Arrays.asList(
+                        new AluguelPropriedade(BASE, 8000),
+                        new AluguelPropriedade(CASA_1, 40000),
+                        new AluguelPropriedade(CASA_2, 100000),
+                        new AluguelPropriedade(CASA_3, 300000),
+                        new AluguelPropriedade(CASA_4, 450000),
+                        new AluguelPropriedade(HOTEL, 600000)
+                )),
 
                 // Verde
-                new Casa("Avenida Brasil", CorPropriedade.VERDE, 450, 40, sala),
-                new Casa("Avenida Dom Pedro II", CorPropriedade.VERDE, 470, 42, sala),
-                new Casa("Avenida Getúlio Vargas", CorPropriedade.VERDE, 490, 44, sala),
+                new Casa("Jardim Botânico", CorPropriedade.VERDE, 50000, sala, Arrays.asList(
+                        new AluguelPropriedade(BASE, 4000),
+                        new AluguelPropriedade(CASA_1, 20000),
+                        new AluguelPropriedade(CASA_2, 60000),
+                        new AluguelPropriedade(CASA_3, 180000),
+                        new AluguelPropriedade(CASA_4, 320000),
+                        new AluguelPropriedade(HOTEL, 450000)
+                )),
+                new Casa("Av. Beira Mar", CorPropriedade.VERDE, 50000, sala, Arrays.asList(
+                        new AluguelPropriedade(BASE, 6000),
+                        new AluguelPropriedade(CASA_1, 30000),
+                        new AluguelPropriedade(CASA_2, 90000),
+                        new AluguelPropriedade(CASA_3, 270000),
+                        new AluguelPropriedade(CASA_4, 400000),
+                        new AluguelPropriedade(HOTEL, 500000)
+                )),
+                new Casa("Av. Niemeyer", CorPropriedade.VERDE, 50000, sala, Arrays.asList(
+                        new AluguelPropriedade(BASE, 2000),
+                        new AluguelPropriedade(CASA_1, 10000),
+                        new AluguelPropriedade(CASA_2, 30000),
+                        new AluguelPropriedade(CASA_3, 90000),
+                        new AluguelPropriedade(CASA_4, 160000),
+                        new AluguelPropriedade(HOTEL, 250000)
+                )),
 
                 // Azul
-                new Casa("Avenida Atlântica", CorPropriedade.AZUL, 500, 50, sala),
-                new Casa("Avenida Boa Viagem", CorPropriedade.AZUL, 600, 60, sala),
+                new Casa("Avenida Paulista", CorPropriedade.AZUL, 100000, sala, Arrays.asList(
+                        new AluguelPropriedade(BASE, 8000),
+                        new AluguelPropriedade(CASA_1, 40000),
+                        new AluguelPropriedade(CASA_2, 100000),
+                        new AluguelPropriedade(CASA_3, 300000),
+                        new AluguelPropriedade(CASA_4, 450000),
+                        new AluguelPropriedade(HOTEL, 600000)
+                )),
+                new Casa("Avenida Recife", CorPropriedade.AZUL, 100000, sala, Arrays.asList(
+                        new AluguelPropriedade(BASE, 8000),
+                        new AluguelPropriedade(CASA_1, 40000),
+                        new AluguelPropriedade(CASA_2, 100000),
+                        new AluguelPropriedade(CASA_3, 300000),
+                        new AluguelPropriedade(CASA_4, 450000),
+                        new AluguelPropriedade(HOTEL, 600000)
+                )),
+                new Casa("Ponte do Guaíba", CorPropriedade.AZUL, 100000, sala, Arrays.asList(
+                        new AluguelPropriedade(BASE, 8000),
+                        new AluguelPropriedade(CASA_1, 40000),
+                        new AluguelPropriedade(CASA_2, 100000),
+                        new AluguelPropriedade(CASA_3, 300000),
+                        new AluguelPropriedade(CASA_4, 450000),
+                        new AluguelPropriedade(HOTEL, 600000)
+                )),
 
                 // Companhias
-                new Companhia("Companhia de Eletricidade", 150, 0, sala),
-                new Companhia("Companhia de Água", 150, 0, sala),
-
-                // Estações
-                new Companhia("Estação da Luz", 200, 25, sala),
-                new Companhia("Estação Júlio Prestes", 200, 25, sala),
-                new Companhia("Estação da Sé", 200, 25, sala),
-                new Companhia("Estação Vila Mariana", 200, 25, sala)
+                new Companhia("Companhia de Força e Luz", 200000, sala),
+                new Companhia("Companhia de Mineração", 20000, sala),
+                new Companhia("Companhia de Água e Saneamento", 20000, sala),
+                new Companhia("PontoCom", 150000, sala),
+                new Companhia("Créditos de Carbono", 150000, sala),
+                new Companhia("Compahia Petrolífera", 200000, sala)
         );
 
 

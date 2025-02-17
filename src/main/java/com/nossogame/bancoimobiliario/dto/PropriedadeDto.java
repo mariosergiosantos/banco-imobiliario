@@ -8,17 +8,11 @@ public class PropriedadeDto {
 
     private double valorCompra;
 
-    private double aluguelBase;
-
-    private int numeroCasas;
-
     private boolean hotel;
-
-    private double valorAluguelAtual;
 
     private boolean hipotecada;
 
-    private String donoId;
+    private JogadorDto dono;
 
     private String salaId;
 
@@ -48,36 +42,12 @@ public class PropriedadeDto {
         this.valorCompra = valorCompra;
     }
 
-    public double getAluguelBase() {
-        return aluguelBase;
-    }
-
-    public void setAluguelBase(double aluguelBase) {
-        this.aluguelBase = aluguelBase;
-    }
-
-    public int getNumeroCasas() {
-        return numeroCasas;
-    }
-
-    public void setNumeroCasas(int numeroCasas) {
-        this.numeroCasas = numeroCasas;
-    }
-
     public boolean isHotel() {
         return hotel;
     }
 
     public void setHotel(boolean hotel) {
         this.hotel = hotel;
-    }
-
-    public double getValorAluguelAtual() {
-        return valorAluguelAtual;
-    }
-
-    public void setValorAluguelAtual(double valorAluguelAtual) {
-        this.valorAluguelAtual = valorAluguelAtual;
     }
 
     public boolean isHipotecada() {
@@ -88,12 +58,12 @@ public class PropriedadeDto {
         this.hipotecada = hipotecada;
     }
 
-    public String getDonoId() {
-        return donoId;
+    public JogadorDto getDono() {
+        return dono;
     }
 
-    public void setDonoId(String donoId) {
-        this.donoId = donoId;
+    public void setDono(JogadorDto dono) {
+        this.dono = dono;
     }
 
     public String getSalaId() {

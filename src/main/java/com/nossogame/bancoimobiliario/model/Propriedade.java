@@ -16,16 +16,10 @@ public abstract class Propriedade extends AbstractModel {
     protected double valorCompra;
 
     @Column(nullable = false)
-    protected double aluguelBase;
-
-    @Column(nullable = false)
     protected boolean hipotecada;
 
     @Column(nullable = false)
     private boolean companhia;
-
-    @Column(nullable = false)
-    protected double valorAluguelAtual;
 
     @ManyToOne
     @JoinColumn(name = "dono_id")
@@ -52,22 +46,6 @@ public abstract class Propriedade extends AbstractModel {
 
     public void setValorCompra(double valorCompra) {
         this.valorCompra = valorCompra;
-    }
-
-    public double getAluguelBase() {
-        return aluguelBase;
-    }
-
-    public void setAluguelBase(double aluguelBase) {
-        this.aluguelBase = aluguelBase;
-    }
-
-    public double getValorAluguelAtual() {
-        return valorAluguelAtual;
-    }
-
-    public void setValorAluguelAtual(double valorAluguelAtual) {
-        this.valorAluguelAtual = valorAluguelAtual;
     }
 
     public boolean isHipotecada() {

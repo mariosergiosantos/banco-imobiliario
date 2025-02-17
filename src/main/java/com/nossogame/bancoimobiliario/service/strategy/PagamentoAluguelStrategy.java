@@ -4,6 +4,8 @@ import com.nossogame.bancoimobiliario.exception.RegraNegocialException;
 import com.nossogame.bancoimobiliario.exception.ResourceNotFoundException;
 import com.nossogame.bancoimobiliario.factory.TransacaoFactory;
 import com.nossogame.bancoimobiliario.model.*;
+import com.nossogame.bancoimobiliario.model.enuns.TipoAluguel;
+import com.nossogame.bancoimobiliario.repository.AluguelPropriedadeRepository;
 import com.nossogame.bancoimobiliario.repository.TransacaoRepository;
 import com.nossogame.bancoimobiliario.service.JogadorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +22,32 @@ public class PagamentoAluguelStrategy implements TransacaoStrategy {
     @Autowired
     private TransacaoRepository transacaoRepository;
 
+    @Autowired
+    private AluguelPropriedadeRepository aluguelPropriedadeRepository;
+
     @Override
     public Transacao executar(Sala sala, Jogador pagador, Propriedade propriedade, double valor) throws RegraNegocialException, ResourceNotFoundException {
         Jogador recebedor = propriedade.getDono();
 
-        double aluguel = getAluguel(pagador, propriedade, recebedor);
+        if (propriedade instanceof Companhia) {
+            throw new RegraNegocialException("Apenas propriedades do tipo Casa permitem pagamento de aluguel.");
+        }
+
+        if (Objects.isNull(recebedor)) {
+            throw new RegraNegocialException("A propriedade não pertence a nenhum jogador.");
+        }
+
+        if (propriedade.isHipotecada()) {
+            throw new RegraNegocialException("Não é possível pagar aluguel de propriedade hipotecada.");
+        }
+
+        Casa casa = (Casa) propriedade;
+
+        double aluguel = calcularAluguel(casa);
+
+        if (pagador.getSaldo() < aluguel) {
+            throw new RegraNegocialException("Saldo insuficiente para pagar o aluguel");
+        }
 
         jogadorService.debitarSaldo(pagador, aluguel);
         jogadorService.creditarSaldo(recebedor, aluguel);
@@ -40,36 +63,23 @@ public class PagamentoAluguelStrategy implements TransacaoStrategy {
         return transacaoRepository.save(transacao);
     }
 
-    private static double getAluguel(Jogador pagador, Propriedade propriedade, Jogador recebedor) throws RegraNegocialException {
-        /*double aluguel = (Objects.isNull(propriedade.getValorAluguelAtual()) || propriedade.getValorAluguelAtual() == 0)
-                ? propriedade.getAluguelBase()
-                : propriedade.getValorAluguelAtual();
+    public double calcularAluguel(Casa propriedade) throws ResourceNotFoundException {
+        TipoAluguel tipoAluguel;
 
-        if (propriedade instanceof Casa) {
-            Casa casa = (Casa) propriedade;
-            if (casa.getNumeroCasas() > 0) {
-                aluguel = aluguel * casa.getNumeroCasas();
+        if (propriedade.isHotel()) {
+            tipoAluguel = TipoAluguel.HOTEL;
+        } else {
+            switch (propriedade.getNumeroCasas()) {
+                case 1 -> tipoAluguel = TipoAluguel.CASA_1;
+                case 2 -> tipoAluguel = TipoAluguel.CASA_2;
+                case 3 -> tipoAluguel = TipoAluguel.CASA_3;
+                case 4 -> tipoAluguel = TipoAluguel.CASA_4;
+                default -> tipoAluguel = TipoAluguel.BASE;
             }
-        }*/
-
-        double aluguel = propriedade.getAluguelBase();
-
-        if (Objects.isNull(recebedor)) {
-            throw new RegraNegocialException("A propriedade não pertence a nenhum jogador.");
         }
 
-        if (recebedor.getId().equals(pagador.getId())) {
-            throw new RegraNegocialException("Você não pode pagar aluguel para uma propriedade que já é sua.");
-        }
-
-        if (pagador.getSaldo() < aluguel) {
-            throw new RegraNegocialException("Saldo insuficiente para pagar o aluguel.");
-        }
-
-        if (propriedade.isHipotecada()) {
-            throw new RegraNegocialException("Não é possível pagar aluguel de propriedade hipotecada.");
-        }
-
-        return aluguel;
+        return aluguelPropriedadeRepository.findByPropriedadeAndTipoAluguel(propriedade, tipoAluguel)
+                .map(AluguelPropriedade::getValor)
+                .orElseThrow(() -> new ResourceNotFoundException("Aluguel não encontrado para essa propriedade"));
     }
 }

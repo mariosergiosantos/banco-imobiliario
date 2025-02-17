@@ -11,10 +11,9 @@ public class Companhia extends Propriedade {
 
     }
 
-    public Companhia(String nome, int valorCompra, int aluguelBase, Sala sala) {
+    public Companhia(String nome, int valorCompra, Sala sala) {
         this.nome = nome;
         this.valorCompra = valorCompra;
-        this.aluguelBase = aluguelBase;
         this.sala = sala;
         this.setCompanhia(true);
     }
