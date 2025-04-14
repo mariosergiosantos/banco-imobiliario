@@ -56,7 +56,7 @@ class JogadorServiceTest extends AbstractTest {
         JogadorDto resultado = jogadorService.adicionarJogador(codigoSala, new JogadorRequestDto(sala.getId(), "Mário"));
 
         assertNotNull(resultado);
-        // TODO Rever assertEquals(novoJogador.getId(), resultado.getId());
+        assertEquals(novoJogador.getId(), resultado.id());
         assertEquals(novoJogador.getNome(), resultado.nome());
         assertEquals(novoJogador.getSaldo(), resultado.saldo());
         assertEquals(SALDO_INICIAL_JOGADOR, resultado.saldo());

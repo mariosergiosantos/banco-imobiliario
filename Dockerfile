@@ -16,6 +16,9 @@ EXPOSE 8080
 
 ENV AWS_ACCESS_KEY_ID=test \
     AWS_SECRET_ACCESS_KEY=test \
-    AWS_REGION=us-east-1
+    AWS_REGION=us-east-1 \
+    SPRING_DATASOURCE_PASSWORD=root \
+    SPRING_DATASOURCE_URL=jdbc:mariadb://localhost:3306/bancoimobiliario?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC \
+    SPRING_DATASOURCE_USERNAME=root
 
 CMD ["java", "-jar", "/home/spring/app.jar"]

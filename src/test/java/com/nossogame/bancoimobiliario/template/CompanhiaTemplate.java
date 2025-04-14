@@ -14,18 +14,14 @@ public class CompanhiaTemplate implements TemplateLoader {
             add("id", UUID.randomUUID().toString());
             add("nome", "Jogador 1");
             add("valorCompra", 60000d);
-            add("aluguelBase", 1000d);
             add("hipotecada", false);
-            add("valorAluguelAtual", 1500d);
         }});
 
         Fixture.of(Companhia.class).addTemplate("companhia-hipotecada", new Rule() {{
             add("id", UUID.randomUUID().toString());
             add("nome", "Jogador 1");
             add("valorCompra", 60000d);
-            add("aluguelBase", 1000d);
             add("hipotecada", false);
-            add("valorAluguelAtual", 1500d);
         }});
     }
 }

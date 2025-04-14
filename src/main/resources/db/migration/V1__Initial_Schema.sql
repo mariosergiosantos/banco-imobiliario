@@ -19,10 +19,8 @@ CREATE TABLE propriedade (
     nome VARCHAR(50) NOT NULL,
     cor ENUM('ROXO', 'CIANO', 'ROSA', 'LARANJA', 'VERMELHO', 'AMARELO', 'VERDE', 'AZUL'),
     valor_compra DOUBLE NOT NULL,
-    aluguel_base DOUBLE NOT NULL,
     numero_casas INT,
     hotel BOOLEAN NOT NULL DEFAULT FALSE,
-    valor_aluguel_atual DOUBLE NOT NULL,
     hipotecada BOOLEAN NOT NULL DEFAULT FALSE,
     companhia BOOLEAN NOT NULL DEFAULT FALSE,
     dono_id CHAR(36),
@@ -62,13 +60,22 @@ CREATE TABLE emprestimo (
     status ENUM('PENDENTE', 'ENCERRADO') NOT NULL DEFAULT 'PENDENTE'
 );
 
+CREATE TABLE aluguel_propriedade (
+    id CHAR(36) NOT NULL PRIMARY KEY,
+    propriedade_id CHAR(36) NOT NULL,
+    tipo_aluguel ENUM('BASE', 'CASA_1', 'CASA_2', 'CASA_3', 'CASA_4', 'HOTEL') NOT NULL,
+    valor DOUBLE NOT NULL
+);
+
 
 -- Adição das constraints após a criação das tabelas
 ALTER TABLE sala
-    ADD CONSTRAINT fk_administrador FOREIGN KEY (administrador_id) REFERENCES jogador(id);
+    ADD CONSTRAINT fk_administrador FOREIGN KEY (administrador_id) REFERENCES jogador(id)
+    ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE jogador
-    ADD CONSTRAINT fk_sala FOREIGN KEY (sala_id) REFERENCES sala(id);
+    ADD CONSTRAINT fk_sala FOREIGN KEY (sala_id) REFERENCES sala(id)
+     ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE jogador
     ADD CONSTRAINT uq_nome_sala UNIQUE (nome, sala_id);
@@ -101,4 +108,7 @@ ALTER TABLE emprestimo
     ADD CONSTRAINT fk_jogador_origem FOREIGN KEY (jogador_origem_id) REFERENCES jogador(id);
 
 ALTER TABLE emprestimo
-    ADD CONSTRAINT  fk_jogador_destino FOREIGN KEY (jogador_destino_id) REFERENCES jogador(id)
+    ADD CONSTRAINT fk_jogador_destino FOREIGN KEY (jogador_destino_id) REFERENCES jogador(id);
+
+ALTER TABLE aluguel_propriedade
+    ADD CONSTRAINT fk_aluguel_propriedade FOREIGN KEY (propriedade_id) REFERENCES propriedade(id);

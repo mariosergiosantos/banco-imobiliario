@@ -14,7 +14,7 @@ public interface PropriedadeMapper {
 
     PropriedadeMapper INSTANCE = Mappers.getMapper(PropriedadeMapper.class);
 
-    @Mapping(source = "sala.id", target = "salaId")
+    @Mapping(target = "dono", source = "dono", qualifiedByName = "toDTOResumido")
     PropriedadeDto toDTO(Propriedade propriedade);
 
     @AfterMapping
@@ -24,7 +24,7 @@ public interface PropriedadeMapper {
             Casa casa = (Casa) source;
 
             target.setHotel(casa.isHotel());
-            target.setCor(casa.getCor().name());
+            target.setCor(casa.getCor().getRgb());
         }
 
         return target;

@@ -43,7 +43,7 @@ public class JogadorService {
         jogador.setAdmin(false);
 
         try {
-            jogadorRepository.save(jogador);
+            jogador = jogadorRepository.save(jogador);
         } catch (DataIntegrityViolationException e) {
             throw new RegraNegocialException("Nome já cadastrado para outro jogador");
         }

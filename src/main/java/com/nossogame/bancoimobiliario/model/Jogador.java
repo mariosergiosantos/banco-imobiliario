@@ -13,7 +13,7 @@ public class Jogador extends AbstractModel {
     private String nome;
 
     @Column(nullable = false)
-    private double saldo;
+    private Double saldo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sala_id")
@@ -27,7 +27,7 @@ public class Jogador extends AbstractModel {
     private List<Propriedade> propriedades;
 
     @Column(nullable = false)
-    private boolean isAdmin;
+    private Boolean isAdmin;
 
     @Transient
     private double saldoPropriedades;
@@ -72,19 +72,19 @@ public class Jogador extends AbstractModel {
         this.propriedades = propriedades;
     }
 
-    public boolean isAdmin() {
+    public Boolean isAdmin() {
         return isAdmin;
     }
 
-    public void setAdmin(boolean admin) {
+    public void setAdmin(Boolean admin) {
         isAdmin = admin;
     }
 
-    public double getSaldoPropriedades() {
+    public Double getSaldoPropriedades() {
         return saldoPropriedades;
     }
 
-    public void setSaldoPropriedades(double saldoPropriedades) {
+    public void setSaldoPropriedades(Double saldoPropriedades) {
         this.saldoPropriedades = saldoPropriedades;
     }
 }

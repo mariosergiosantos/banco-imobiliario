@@ -52,7 +52,6 @@ class SalaControllerTest extends AbstractTest {
                 .andExpect(jsonPath("$.status").value("ABERTA"))
                 .andExpect(jsonPath("$.dataCriacao").exists())
                 .andExpect(jsonPath("$.jogadores").isNotEmpty())
-                .andExpect(jsonPath("$.propriedades").isEmpty())
                 .andExpect(header().exists("X-Correlation-Id"));
 
         verify(salaService).criarSala(any(SalaRequestDto.class));
@@ -93,7 +92,6 @@ class SalaControllerTest extends AbstractTest {
                 .andExpect(jsonPath("$.status").value("ABERTA"))
                 .andExpect(jsonPath("$.dataCriacao").exists())
                 .andExpect(jsonPath("$.jogadores").isNotEmpty())
-                .andExpect(jsonPath("$.propriedades").isEmpty())
                 .andExpect(header().exists("X-Correlation-Id"));
 
         verify(salaService).buscarSala(codigoSala);

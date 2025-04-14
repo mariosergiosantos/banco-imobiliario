@@ -14,8 +14,6 @@ public class PropriedadeDto {
 
     private JogadorDto dono;
 
-    private String salaId;
-
     private String cor;
 
     public String getId() {
@@ -64,14 +62,6 @@ public class PropriedadeDto {
 
     public void setDono(JogadorDto dono) {
         this.dono = dono;
-    }
-
-    public String getSalaId() {
-        return salaId;
-    }
-
-    public void setSalaId(String salaId) {
-        this.salaId = salaId;
     }
 
     public String getCor() {

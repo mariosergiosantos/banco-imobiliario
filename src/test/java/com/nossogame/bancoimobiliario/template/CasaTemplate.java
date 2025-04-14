@@ -20,9 +20,7 @@ public class CasaTemplate implements TemplateLoader {
             add("id", UUID.randomUUID().toString());
             add("nome", "Jogador 1");
             add("valorCompra", 60000d);
-            add("aluguelBase", 1000d);
             add("hipotecada", false);
-            add("valorAluguelAtual", 1500d);
         }});
 
         Fixture.of(Casa.class).addTemplate("casa-hipotecadada", new Rule() {{
@@ -33,9 +31,7 @@ public class CasaTemplate implements TemplateLoader {
             add("id", UUID.randomUUID().toString());
             add("nome", "Jogador 1");
             add("valorCompra", 60000d);
-            add("aluguelBase", 1000d);
             add("hipotecada", true);
-            add("valorAluguelAtual", 1500d);
         }});
 
         Fixture.of(Casa.class).addTemplate("hotel", new Rule() {{
@@ -46,9 +42,7 @@ public class CasaTemplate implements TemplateLoader {
             add("id", UUID.randomUUID().toString());
             add("nome", "Jogador 1");
             add("valorCompra", 60000d);
-            add("aluguelBase", 1000d);
             add("hipotecada", false);
-            add("valorAluguelAtual", 1500d);
         }});
     }
 }

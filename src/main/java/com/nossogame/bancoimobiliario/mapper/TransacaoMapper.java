@@ -8,15 +8,14 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+@Mapper(uses = {JogadorMapper.class, PropriedadeMapper.class})
 public interface TransacaoMapper {
 
     TransacaoMapper INSTANCE = Mappers.getMapper(TransacaoMapper.class);
 
     @Mapping(source = "sala.id", target = "salaId")
-    @Mapping(source = "comprador.id", target = "origemId")
-    @Mapping(source = "vendedor.id", target = "destinoId")
-    @Mapping(source = "propriedade.id", target = "propriedadeId")
+    @Mapping(source = "comprador", target = "origem")
+    @Mapping(source = "vendedor", target = "destino")
     TransacaoDto toDTO(Transacao transacao);
 
     List<TransacaoDto> toDTO(List<Transacao> transacoes);

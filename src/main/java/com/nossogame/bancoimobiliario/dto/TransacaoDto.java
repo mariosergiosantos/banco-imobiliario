@@ -10,11 +10,11 @@ public class TransacaoDto {
 
     private String salaId;
 
-    private String origemId;
+    private JogadorDto origem;
 
-    private String destinoId;
+    private JogadorDto destino;
 
-    private String propriedadeId;
+    private PropriedadeDto propriedade;
 
     private double valor;
 
@@ -40,28 +40,28 @@ public class TransacaoDto {
         this.salaId = salaId;
     }
 
-    public String getOrigemId() {
-        return origemId;
+    public JogadorDto getOrigem() {
+        return origem;
     }
 
-    public void setOrigemId(String origemId) {
-        this.origemId = origemId;
+    public void setOrigem(JogadorDto origem) {
+        this.origem = origem;
     }
 
-    public String getDestinoId() {
-        return destinoId;
+    public JogadorDto getDestino() {
+        return destino;
     }
 
-    public void setDestinoId(String destinoId) {
-        this.destinoId = destinoId;
+    public void setDestino(JogadorDto destino) {
+        this.destino = destino;
     }
 
-    public String getPropriedadeId() {
-        return propriedadeId;
+    public PropriedadeDto getPropriedade() {
+        return propriedade;
     }
 
-    public void setPropriedadeId(String propriedadeId) {
-        this.propriedadeId = propriedadeId;
+    public void setPropriedade(PropriedadeDto propriedade) {
+        this.propriedade = propriedade;
     }
 
     public double getValor() {
