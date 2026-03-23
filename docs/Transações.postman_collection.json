@@ -1,0 +1,272 @@
+{
+  "info": {
+    "_postman_id": "3bc64c8e-af5d-40b5-bbd7-b2e2b452c13b",
+    "name": "Transações",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "2688499",
+    "_collection_link": "https://go.postman.co/collection/2688499-3bc64c8e-af5d-40b5-bbd7-b2e2b452c13b?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Comprar propriedade do banco",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"tipoTransacao\": \"COMPRA_PROPRIEDADE_DO_BANCO\",\r\n    \"compradorId\": \"{{jogadorId}}\",\r\n    \"propriedadeId\": \"{{propriedadeId}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{host}}:8080/api/v1/transacoes/salas/{{salaId}}",
+          "host": [
+            "{{host}}"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "transacoes",
+            "salas",
+            "{{salaId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Comprar propriedade de outro jogador",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"tipoTransacao\": \"COMPRA_PROPRIEDADE_JOGADOR\",\r\n    \"compradorId\": \"dc3a45e2-82cf-40b9-8605-41d956003fe3\",\r\n    \"propriedadeId\": \"ce480d16-1e2c-4878-bb7f-687a9e542ff4\",\r\n    \"valor\": 80000\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{host}}:8080/api/v1/transacoes/salas/{{salaId}}",
+          "host": [
+            "{{host}}"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "transacoes",
+            "salas",
+            "{{salaId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Pagamento de Aluguel",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"tipoTransacao\": \"PAGAMENTO_ALUGUEL\",\r\n    \"jogadorId\": \"421524cd-9bf0-493b-8064-19063904fe1d\",\r\n    \"propriedadeId\": \"ce480d16-1e2c-4878-bb7f-687a9e542ff4\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{host}}:8080/api/v1/transacoes/salas/{{salaId}}",
+          "host": [
+            "{{host}}"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "transacoes",
+            "salas",
+            "{{salaId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Pagamento de salario",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"tipoTransacao\": \"PAGAMENTO_SALARIO\",\r\n    \"jogadorId\": \"dc3a45e2-82cf-40b9-8605-41d956003fe3\"    \r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{host}}:8080/api/v1/transacoes/salas/{{salaId}}",
+          "host": [
+            "{{host}}"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "transacoes",
+            "salas",
+            "{{salaId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Construir Propriedade",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"tipoTransacao\": \"CONSTRUIR_PROPRIEDADE\",\r\n    \"jogadorId\": \"5ca7bdcc-a246-4dbf-8a3e-2f233f7eb115\",\r\n    \"propriedadeId\": \"95791d24-fdfc-4045-8de0-03b437047f4e\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{host}}:8080/api/v1/transacoes/salas/{{salaId}}",
+          "host": [
+            "{{host}}"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "transacoes",
+            "salas",
+            "{{salaId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Listar transações da sala",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8080/api/v1/transacoes/salas/{{salaId}}",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "transacoes",
+            "salas",
+            "{{salaId}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

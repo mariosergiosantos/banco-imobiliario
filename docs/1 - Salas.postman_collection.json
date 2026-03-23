@@ -1,0 +1,184 @@
+{
+  "info": {
+    "_postman_id": "4a258c97-8785-43d0-94ce-8c4779bc03a0",
+    "name": "1 - Salas",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "2688499",
+    "_collection_link": "https://go.postman.co/collection/2688499-4a258c97-8785-43d0-94ce-8c4779bc03a0?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Criação de salas",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.environment.set(\"salaId\", pm.response.json().id);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"nomeJogadorAdm\": \"Mário\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{host}}:8080/api/v1/salas",
+          "host": [
+            "{{host}}"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "salas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Busca todas as Salas",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.environment.set(\"propriedadeId\", pm.response.json()[0].propriedades[0].id);\r",
+              "pm.environment.set(\"compradorId\", pm.response.json()[0].jogadores[0].id);\r",
+              "pm.environment.set(\"vendedorId\", pm.response.json()[0].jogadores[1].id);"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{host}}:8080/api/v1/salas",
+          "host": [
+            "{{host}}"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "salas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Detalhes da Sala",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.environment.set(\"propriedadeId\", pm.response.json()[0].propriedades[0].id);\r",
+              "pm.environment.set(\"compradorId\", pm.response.json()[0].jogadores[0].id);\r",
+              "pm.environment.set(\"vendedorId\", pm.response.json()[0].jogadores[1].id);"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{host}}:8080/api/v1/salas/{{salaId}}",
+          "host": [
+            "{{host}}"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "salas",
+            "{{salaId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Iniciar Jogo",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{host}}:8080/api/v1/salas/{{salaId}}/iniciar",
+          "host": [
+            "{{host}}"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "salas",
+            "{{salaId}}",
+            "iniciar"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Finalizar Jogo",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{host}}:8080/api/v1/salas/{{salaId}}/finalizar",
+          "host": [
+            "{{host}}"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "salas",
+            "{{salaId}}",
+            "finalizar"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
